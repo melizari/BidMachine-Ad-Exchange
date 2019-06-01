@@ -1,0 +1,13 @@
+package com.appodealx.exchange.common.models.auction
+
+object Macros {
+  val AUCTION_ID = "AUCTION_ID"
+  val AUCTION_BID_ID = "AUCTION_BID_ID"
+  val AUCTION_IMP_ID = "AUCTION_IMP_ID"
+  val AUCTION_SEAT_ID = "AUCTION_SEAT_ID"
+  val AUCTION_AD_ID = "AUCTION_AD_ID"
+  val AUCTION_PRICE = "AUCTION_PRICE"
+  val AUCTION_CURRENCY = "AUCTION_CURRENCY"
+  val AUCTION_LOSS = "AUCTION_LOSS"
+  val AUCTION_MBR = "AUCTION_MBR"
+}

@@ -1,0 +1,147 @@
+{
+  "dataSources": [
+    {
+      "spec": {
+        "dataSchema": {
+          "dataSource": "adnetwork-bids",
+          "parser": {
+            "type": "string",
+            "parseSpec": {
+              "flattenSpec": {
+                "useFieldDiscovery": false,
+                "fields": [
+                  "timestamp",
+                  "adNetworkName",
+                  "app",
+                  "adType",
+                  "country",
+                  "displayManager",
+                  "displayManagerVersion",
+                  "deviceOs",
+                  "deviceOsVersion",
+                  "bidFloorLevel",
+                  "bidPriceLevel",
+                  "deviceType",
+                  "deviceConnectionType",
+                  "bidStatus",
+                  "appCategories",
+                  "appBundle",
+                  "appPublisherName",
+                  "coppa",
+                  "cached",
+                  "isUnderPrice",
+                  {
+                    "type": "path",
+                    "name": "appMetric",
+                    "expr": "$.app"
+                  },
+                  {
+                    "type": "path",
+                    "name": "bidRequestIdMetric",
+                    "expr": "$.bidRequestId"
+                  },
+                  {
+                    "type": "path",
+                    "name": "clearingPriceMetric",
+                    "expr": "$.clearingPrice"
+                  },
+                  {
+                    "type": "path",
+                    "name": "usersCountMetric",
+                    "expr": "$.deviceIfa"
+                  },
+                  "adNetworkPlacementId",
+                  {
+                    "type": "path",
+                    "name": "zoneId",
+                    "expr": "$.customInfo.zone_id"
+                  },
+                  {
+                    "type": "path",
+                    "name": "placementId",
+                    "expr": "$.customInfo.placement_id"
+                  },
+                  "sessionNumber",
+                  "impressionNumber",
+                  "ipLocationService",
+                  "dcid"
+                ]
+              },
+              "timestampSpec": {
+                "column": "timestamp",
+                "format": "auto"
+              },
+              "dimensionsSpec": {
+                "dimensions": [],
+                "dimensionExclusions": [
+                  "appMetric",
+                  "bidRequestIdMetric",
+                  "clearingPriceMetric",
+                  "usersCountMetric"
+                ]
+              },
+              "format": "json"
+            }
+          },
+          "granularitySpec": {
+            "type": "uniform",
+            "segmentGranularity": "hour",
+            "queryGranularity": "hour"
+          },
+          "metricsSpec": [
+            {
+              "type": "count",
+              "name": "bids"
+            },
+            {
+              "type": "hyperUnique",
+              "name": "apps",
+              "fieldName": "appMetric"
+            },
+            {
+              "type": "hyperUnique",
+              "name": "users",
+              "fieldName": "usersCountMetric"
+            },
+            {
+              "type": "hyperUnique",
+              "name": "auctions",
+              "fieldName": "bidRequestIdMetric"
+            },
+            {
+              "type": "doubleSum",
+              "name": "clearingPrice",
+              "fieldName": "clearingPriceMetric"
+            }
+          ]
+        },
+        "ioConfig": {
+          "type": "realtime"
+        },
+        "tuningConfig": {
+          "type": "realtime",
+          "maxRowsInMemory": "100000",
+          "intermediatePersistPeriod": "PT10M",
+          "windowPeriod": "PT10M"
+        }
+      },
+      "properties": {
+        "task.partitions": "3",
+        "task.replicants": "2",
+        "topicPattern": "adnetworkbids",
+        "topicPattern.priority": 100
+      }
+    }
+  ],
+  "properties": {
+    "zookeeper.connect": "",
+    "kafka.zookeeper.connect": "",
+    "kafka.group.id": "tranquility-adnetwork-bids",
+    "druid.discovery.curator.path": "/druid/discovery",
+    "druid.selectors.indexing.serviceName": "druid/overlord",
+    "commit.periodMillis": "10000",
+    "consumer.numThreads": "2",
+    "serialization.format": "smile",
+    "druidBeam.taskLocator": "overlord"
+  }
+}

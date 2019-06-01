@@ -1,0 +1,36 @@
+<!-- https://www.playframework.com/documentation/latest/SettingsLogger -->
+<configuration>
+
+    <conversionRule conversionWord="coloredLevel" converterClass="play.api.libs.logback.ColoredLevel"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %coloredLevel %logger{15} - %message%n%rEx{full}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ASYNCSTDOUT" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="STDOUT"/>
+    </appender>
+
+    <logger name="play" level="${PLAY_LOG_LEVEL:-INFO}"/>
+    <logger name="application" level="${APP_LOG_LEVEL:-INFO}"/>
+    <logger name="controllers" level="${APP_LOG_LEVEL:-INFO}"/>
+    <logger name="akka" level="${AKKA_LOG_LEVEL:-INFO}"/>
+    <logger name="slick" level="${SLICK_LOG_LEVEL:-WARN}"/>
+    <logger name="io.swagger" level="${SWAGGER_LOG_LEVEL:-WARN}"/>
+    <logger name="com.lightbend.lagom" level="${LAGOM_LOG_LEVEL:-INFO}"/>
+
+    <!-- Off these ones as they are annoying, and anyway we manage configuration ourselves -->
+    <logger name="com.avaje.ebean.config.PropertyMapLoader" level="OFF"/>
+    <logger name="com.avaje.ebeaninternal.server.core.XmlConfigLoader" level="OFF"/>
+    <logger name="com.avaje.ebeaninternal.server.lib.BackgroundThread" level="OFF"/>
+    <logger name="com.gargoylesoftware.htmlunit.javascript" level="OFF"/>
+    <logger name="akka.actor" level="OFF"/>
+    <logger name="org.zaxxer.hikari" level="OFF"/>
+
+    <root level="${ROOT_LOG_LEVEL:-WARN}">
+        <appender-ref ref="ASYNCSTDOUT"/>
+    </root>
+
+</configuration>

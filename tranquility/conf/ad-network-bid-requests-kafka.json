@@ -1,0 +1,138 @@
+{
+  "dataSources": [
+    {
+      "spec": {
+        "dataSchema": {
+          "dataSource": "adnetwork-requests",
+          "parser": {
+            "type": "string",
+            "parseSpec": {
+              "flattenSpec": {
+                "useFieldDiscovery": false,
+                "fields": [
+                  "timestamp",
+                  "adNetworkName",
+                  "adType",
+                  "app",
+                  "appBundle",
+                  "country",
+                  {
+                    "type": "path",
+                    "name": "displayManager",
+                    "expr": "$.dm"
+                  },
+                  {
+                    "type": "path",
+                    "name": "displayManagerVersion",
+                    "expr": "$.dmVersion"
+                  },
+                  {
+                    "type": "path",
+                    "name": "os",
+                    "expr": "$.platform"
+                  },
+                  "osVersion",
+                  "bidResponseStatus",
+                  "bidPriceLevel",
+                  {
+                    "type": "path",
+                    "name": "appsMetric",
+                    "expr": "$.app"
+                  },
+                  {
+                    "type": "path",
+                    "name": "usersCountMetric",
+                    "expr": "$.ifa"
+                  },
+                  {
+                    "type": "path",
+                    "name": "bidRequestIdMetric",
+                    "expr": "$.bidRequestId"
+                  },
+                  "adNetworkPlacementId",
+                  {
+                    "type": "path",
+                    "name": "mediationIdMetric",
+                    "expr": "$.mediationId"
+                  },
+                  "dcid"
+                ]
+              },
+              "timestampSpec": {
+                "column": "timestamp",
+                "format": "auto"
+              },
+              "dimensionsSpec": {
+                "dimensions": [],
+                "dimensionExclusions": [
+                  "appsMetric",
+                  "bidRequestIdMetric",
+                  "usersCountMetric",
+                  "mediationIdMetric"
+                ]
+              },
+              "format": "json"
+            }
+          },
+          "granularitySpec": {
+            "type": "uniform",
+            "segmentGranularity": "hour",
+            "queryGranularity": "hour"
+          },
+          "metricsSpec": [
+            {
+              "type": "count",
+              "name": "requests"
+            },
+            {
+              "type": "hyperUnique",
+              "name": "apps",
+              "fieldName": "appsMetric"
+            },
+            {
+              "type": "hyperUnique",
+              "name": "auctions",
+              "fieldName": "bidRequestIdMetric"
+            },
+            {
+              "type": "hyperUnique",
+              "name": "users",
+              "fieldName": "usersCountMetric"
+            },
+            {
+              "type": "hyperUnique",
+              "name": "mediationCount",
+              "fieldName": "mediationIdMetric"
+            }
+          ]
+        },
+        "ioConfig": {
+          "type": "realtime"
+        },
+        "tuningConfig": {
+          "type": "realtime",
+          "maxRowsInMemory": "100000",
+          "intermediatePersistPeriod": "PT5M",
+          "windowPeriod": "PT10M"
+        }
+      },
+      "properties": {
+        "task.partitions": "3",
+        "task.replicants": "2",
+        "topicPattern": "adnetworkrequests",
+        "topicPattern.priority": 100
+      }
+    }
+  ],
+  "properties": {
+    "zookeeper.connect": "",
+    "kafka.zookeeper.connect": "",
+    "kafka.group.id": "tranquility-adnetwork-bid-requests",
+    "druid.discovery.curator.path": "/druid/discovery",
+    "druid.selectors.indexing.serviceName": "druid/overlord",
+    "commit.periodMillis": "10000",
+    "consumer.numThreads": "2",
+    "serialization.format": "smile",
+    "druidBeam.taskLocator": "overlord"
+  }
+}

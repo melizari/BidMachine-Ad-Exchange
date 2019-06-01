@@ -1,0 +1,118 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+GET           /status                                         controllers.HomeController.status
+
+GET           /docs                                           controllers.HomeController.index
+GET           /docs/swagger.utils.json                        controllers.ApiHelpController.getResources
+GET           /docs/swagger-ui/*file                          controllers.Assets.at(path="/public/lib/swagger-ui", file)
+
+POST          /auth                                           controllers.AuthController.signIn
+
+POST          /permissions                                    controllers.PermissionsController.create
+DELETE        /users/:userId/permissions/:resourceType        controllers.PermissionsController.delete(userId: Long, resourceType: ResourceType)
+
+GET           /sellers                                        controllers.SellersController.readAll
+POST          /sellers                                        controllers.SellersController.create
+PUT           /sellers/:id                                    controllers.SellersController.update(id: Long)
+GET           /sellers/:id                                    controllers.SellersController.seller(id: Long)
+DELETE        /sellers/:id                                    controllers.SellersController.delete(id: Long)
+
+GET           /users/me                                       controllers.UserController.me
+
+POST          /login                                          controllers.UserController.login
+POST          /password/update                                controllers.UserController.updatePassword
+POST          /password/forgot                                controllers.UserController.resetPassword
+POST          /password/renew                                 controllers.UserController.renewPassword
+
+
+# Admin routes
+GET           /users/:id                                      controllers.AdminController.user(id: Long)
+POST          /users/:id                                      controllers.AdminController.updateUser(id: Long)
+GET           /users                                          controllers.AdminController.getAllUsers
+POST          /users                                          controllers.AdminController.createUser
+POST          /users/:id/login                                controllers.AdminController.addLogin(id: Long)
+POST          /users/:id/password                             controllers.AdminController.updatePassword(id: Long)
+
+POST          /announcing/agencies                            controllers.AdminController.announcingByAgencyIDs
+POST          /announcing/users                               controllers.AdminController.announcingByUserIDs
+POST          /announcing/all                                 controllers.AdminController.announcingForAll
+
+GET           /agency                                         controllers.AgencyController.readAllAgencies
+GET           /agency/:id                                     controllers.AgencyController.readAgency(id: Long)
+POST          /agency                                         controllers.AgencyController.createAgency
+POST          /agency/:id                                     controllers.AgencyController.updateAgency(id: Long)
+DELETE        /agency/:id                                     controllers.AgencyController.deleteAgency(id: Long)
+POST          /agency/:id/active                              controllers.AgencyController.activateAgency(id: Long)
+DELETE        /agency/:id/active                              controllers.AgencyController.deactivateAgency(id: Long)
+GET           /agency/:id/bidder                              controllers.AgencyController.readBiddersByAgencyId(id: Long)
+POST          /agency/:id/bidder                              controllers.AgencyController.createBidder(id: Long)
+
+GET           /bidder                                         controllers.BidderController.readAllBidders
+GET           /bidder/:id                                     controllers.BidderController.readBidder(id: Long)
+POST          /bidder/:id                                     controllers.BidderController.updateBidder(id: Long)
+DELETE        /bidder/:id                                     controllers.BidderController.deleteBidder(id: Long)
+
+GET           /bidder/:id/adprofile/banner                    controllers.BidderController.readBannerAdProfiles(id: Long)
+POST          /bidder/:id/adprofile/banner                    controllers.BidderController.createBannerAdProfile(id: Long)
+GET           /bidder/:id/adprofile/video                     controllers.BidderController.readVideoAdProfiles(id: Long)
+POST          /bidder/:id/adprofile/video                     controllers.BidderController.createVideoAdProfile(id: Long)
+GET           /bidder/:id/adprofile/native                    controllers.BidderController.readNativeAdProfiles(id: Long)
+POST          /bidder/:id/adprofile/native                    controllers.BidderController.createNativeAdProfile(id: Long)
+
+GET           /adprofile/banner                               controllers.AdProfileController.readAllBannerAdProfiles
+GET           /adprofile/banner/:id                           controllers.AdProfileController.readBannerAdProfile(id: Long)
+POST          /adprofile/banner/:id                           controllers.AdProfileController.updateBannerAdProfile(id: Long)
+DELETE        /adprofile/banner/:id                           controllers.AdProfileController.deleteBannerAdProfile(id: Long)
+POST          /adprofile/banner/:id/active                    controllers.AdProfileController.activateBannerAdProfile(id: Long)
+DELETE        /adprofile/banner/:id/active                    controllers.AdProfileController.deactivateBannerAdProfile(id: Long)
+
+GET           /adprofile/video                                controllers.AdProfileController.readAllVideoAdProfiles
+GET           /adprofile/video/:id                            controllers.AdProfileController.readVideoAdProfile(id: Long)
+POST          /adprofile/video/:id                            controllers.AdProfileController.updateVideoAdProfile(id: Long)
+DELETE        /adprofile/video/:id                            controllers.AdProfileController.deleteVideoAdProfile(id: Long)
+POST          /adprofile/video/:id/active                     controllers.AdProfileController.activateVideoAdProfile(id: Long)
+DELETE        /adprofile/video/:id/active                     controllers.AdProfileController.deactivateVideoAdProfile(id: Long)
+
+GET           /adprofile/native                               controllers.AdProfileController.readAllNativeAdProfiles
+GET           /adprofile/native/:id                           controllers.AdProfileController.readNativeAdProfile(id: Long)
+POST          /adprofile/native/:id                           controllers.AdProfileController.updateNativeAdProfile(id: Long)
+DELETE        /adprofile/native/:id                           controllers.AdProfileController.deleteNativeAdProfile(id: Long)
+POST          /adprofile/native/:id/active                    controllers.AdProfileController.activateNativeAdProfile(id: Long)
+DELETE        /adprofile/native/:id/active                    controllers.AdProfileController.deactivateNativeAdProfile(id: Long)
+
+
+GET           /performance/adType                             controllers.AnalyticsController.adTypes
+GET           /performance/platform                           controllers.AnalyticsController.platforms
+GET           /performance/country                            controllers.AnalyticsController.countries
+GET           /performance/agency                             controllers.AnalyticsController.agencies
+GET           /performance/seller                             controllers.AnalyticsController.sellers
+
+POST          /performance                                    controllers.AnalyticsController.performance
+
+
+POST          /adspace/banner/:id                             controllers.AdSpaceController.updateBannerAdSpace(id: AdSpaceId)
+DELETE        /adspace/banner/:id                             controllers.AdSpaceController.deleteBannerAdSpace(id: AdSpaceId)
+POST          /adspace/banner/:id/active                      controllers.AdSpaceController.activateBannerAdSpace(id: AdSpaceId)
+DELETE        /adspace/banner/:id/active                      controllers.AdSpaceController.deactivateBannerAdSpace(id: AdSpaceId)
+
+POST          /adspace/video/:id                              controllers.AdSpaceController.updateVideoAdSpace(id: AdSpaceId)
+DELETE        /adspace/video/:id                              controllers.AdSpaceController.deleteVideoAdSpace(id: AdSpaceId)
+POST          /adspace/video/:id/active                       controllers.AdSpaceController.activateVideoAdSpace(id: AdSpaceId)
+DELETE        /adspace/video/:id/active                       controllers.AdSpaceController.deactivateVideoAdSpace(id: AdSpaceId)
+
+POST          /adspace/native/:id                             controllers.AdSpaceController.updateNativeAdSpace(id: AdSpaceId)
+DELETE        /adspace/native/:id                             controllers.AdSpaceController.deleteNativeAdSpace(id: AdSpaceId)
+POST          /adspace/native/:id/active                      controllers.AdSpaceController.activateNativeAdSpace(id: AdSpaceId)
+DELETE        /adspace/native/:id/active                      controllers.AdSpaceController.deactivateNativeAdSpace(id: AdSpaceId)
+
+GET           /seller/:id/adspace/banner                      controllers.AdSpaceController.readBannerBySellerId(id: Long)
+POST          /seller/:id/adspace/banner                      controllers.AdSpaceController.createBannerAdSpaceWithSellerId(id: Long)
+GET           /seller/:id/adspace/video                       controllers.AdSpaceController.readVideoAdSpaceBySellerId(id: Long)
+POST          /seller/:id/adspace/video                       controllers.AdSpaceController.createVideoAdSpaceWithSellerId(id: Long)
+GET           /seller/:id/adspace/native                      controllers.AdSpaceController.readNativeBySellerId(id: Long)
+POST          /seller/:id/adspace/native                      controllers.AdSpaceController.createNativeAdSpaceWithSellerId(id: Long)
+
+GET           /report/ssp                                     controllers.ReportsController.reportSSP(start: String, end: String)

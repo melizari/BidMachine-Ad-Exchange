@@ -1,0 +1,186 @@
+{
+  "dataSources": [
+    {
+      "spec": {
+        "dataSchema": {
+          "dataSource": "bids",
+          "parser": {
+            "type": "string",
+            "parseSpec": {
+              "flattenSpec": {
+                "useFieldDiscovery": false,
+                "fields": [
+                  "timestamp",
+                  "adType",
+                  "adSize",
+                  "adSpaceId",
+                  "appExternalId",
+                  "appPublisherExternalId",
+                  "appName",
+                  "appPublisherName",
+                  "appBundle",
+                  "appCategories",
+                  "appVersion",
+                  "agencyId",
+                  "agencyExternalId",
+                  "agencyName",
+                  "bidderId",
+                  "bidderName",
+                  "bidderAdProfileId",
+                  "bidderRtbVersion",
+                  "bidFloorLevel",
+                  "bidStatus",
+                  "bidAdomain",
+                  "bidBundle",
+                  "bidCategories",
+                  "bidAttributes",
+                  "bidImpressionUrl",
+                  "bidCampaignId",
+                  "bidCreativeId",
+                  "bidCreativeRating",
+                  "bidNurlDomain",
+                  "bidNurlStatus",
+                  "bidHasAdm",
+                  "bidPriceLevel",
+                  "clearingPriceLevel",
+                  "requestBlockedCategories",
+                  "requestBlockedAdvertisers",
+                  "deviceOs",
+                  "deviceOsVersion",
+                  "deviceCarrier",
+                  "deviceMake",
+                  "deviceModel",
+                  "deviceType",
+                  "deviceConnectionType",
+                  "displayManager",
+                  "displayManagerVersion",
+                  "country",
+                  "coppa",
+                  "test",
+                  {
+                    "type": "path",
+                    "name": "appExternalIdMetric",
+                    "expr": "$.appExternalId"
+                  },
+                  {
+                    "type": "path",
+                    "name": "bidRequestIdMetric",
+                    "expr": "$.bidRequestId"
+                  },
+                  {
+                    "type": "path",
+                    "name": "deviceIfaMetric",
+                    "expr": "$.deviceIfa"
+                  },
+                  {
+                    "type": "path",
+                    "name": "clearingPriceMetric",
+                    "expr": "$.clearingPrice"
+                  },
+                  "siteId",
+                  "sitePublisherId",
+                  "siteName",
+                  "sitePublisherName",
+                  "siteDomain",
+                  "siteCategories",
+                  "siteSectionCategories",
+                  "sitePageCategories",
+                  "sitePage",
+                  "siteRef",
+                  "siteSearch",
+                  "siteMobile",
+                  "sitePrivacypolicy",
+                  "siteKeywords",
+                  "sellerId",
+                  "sellerName",
+                  "sspAuctionType",
+                  "exchangePublisherId",
+                  "adNetwork",
+                  "adNetworkName",
+                  "mediationSdkName",
+                  "mediationSdkVersion",
+                  "isUnderPrice",
+                  "sessionNumber",
+                  "impressionNumber",
+                  "ipLocationService",
+                  "dcid"
+                ]
+              },
+              "timestampSpec": {
+                "column": "timestamp",
+                "format": "auto"
+              },
+              "dimensionsSpec": {
+                "dimensions": [],
+                "dimensionExclusions": [
+                  "appExternalIdMetric",
+                  "bidRequestIdMetric",
+                  "deviceIfaMetric",
+                  "clearingPriceMetric"
+                ]
+              },
+              "format": "json"
+            }
+          },
+          "granularitySpec": {
+            "type": "uniform",
+            "segmentGranularity": "hour",
+            "queryGranularity": "hour"
+          },
+          "metricsSpec": [
+            {
+              "type": "count",
+              "name": "bidRequestCount"
+            },
+            {
+              "type": "hyperUnique",
+              "name": "appCount",
+              "fieldName": "appExternalIdMetric"
+            },
+            {
+              "type": "hyperUnique",
+              "name": "auctionCount",
+              "fieldName": "bidRequestIdMetric"
+            },
+            {
+              "type": "hyperUnique",
+              "name": "deviceCount",
+              "fieldName": "deviceIfaMetric"
+            },
+            {
+              "type": "doubleSum",
+              "name": "clearingPrice",
+              "fieldName": "clearingPriceMetric"
+            }
+          ]
+        },
+        "ioConfig": {
+          "type": "realtime"
+        },
+        "tuningConfig": {
+          "type": "realtime",
+          "maxRowsInMemory": "100000",
+          "intermediatePersistPeriod": "PT5M",
+          "windowPeriod": "PT10M"
+        }
+      },
+      "properties": {
+        "task.partitions": "1",
+        "task.replicants": "2",
+        "topicPattern": "bids",
+        "topicPattern.priority": 100
+      }
+    }
+  ],
+  "properties": {
+    "zookeeper.connect": "",
+    "kafka.zookeeper.connect": "",
+    "kafka.group.id": "tranquility-bids",
+    "druid.discovery.curator.path": "/druid/discovery",
+    "druid.selectors.indexing.serviceName": "druid/overlord",
+    "commit.periodMillis": "10000",
+    "consumer.numThreads": "1",
+    "serialization.format": "smile",
+    "druidBeam.taskLocator": "overlord"
+  }
+}

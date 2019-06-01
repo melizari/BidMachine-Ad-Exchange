@@ -1,0 +1,35 @@
+<!-- https://www.playframework.com/documentation/latest/SettingsLogger -->
+<configuration>
+
+  <conversionRule conversionWord="coloredLevel" converterClass="com.lightbend.lagom.internal.logback.ColoredLevel" />
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %coloredLevel %logger{15} - %message%n%rEx{full}</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="ASYNCSTDOUT" class="ch.qos.logback.classic.AsyncAppender">
+    <appender-ref ref="STDOUT" />
+  </appender>
+
+  <logger name="play" level="${PLAY_LOG_LEVEL:-INFO}" />
+  <logger name="akka" level="${AKKA_LOG_LEVEL:-INFO}" />
+  <logger name="com.lightbend.lagom" level="${LAGOM_LOG_LEVEL:-INFO}" />
+  <logger name="application" level="${APP_LOG_LEVEL:-INFO}" />
+
+  <logger name="ing.wbaa.druid" level="${SCRUID_LOG_LEVEL:-ERROR}" />
+
+  <logger name="org.apache.cassandra" level="ERROR" />
+  <logger name="com.datastax.driver" level="ERROR" />
+  <logger name="com.datastax.driver.core.ControlConnection" level="OFF" />
+  <logger name="org.apache.kafka" level="WARN" />
+  <logger name="ing.wbaa.druid" level="{SCRUID_LOG_LEVEL:-INFO}" />
+  <logger name="com.appodealx.exchange.druid" level="{APP_LOG_LEVEL:-INFO}" />
+
+
+  <root level="${ROOT_LOG_LEVEL:-INFO}">
+    <appender-ref ref="ASYNCSTDOUT" />
+  </root>
+
+</configuration>

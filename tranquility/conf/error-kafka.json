@@ -1,0 +1,105 @@
+{
+  "dataSources": [
+    {
+      "spec": {
+        "dataSchema": {
+          "dataSource": "errors",
+          "parser": {
+            "type": "string",
+            "parseSpec": {
+              "timestampSpec": {
+                "column": "timestamp",
+                "format": "auto"
+              },
+              "dimensionsSpec": {
+                "dimensions": [
+                  "errorCode",
+                  "appId",
+                  "appIdRaw",
+                  "appName",
+                  "appBundle",
+                  "agencyExternalId",
+                  "agencyId",
+                  "agencyName",
+                  "deviceOs",
+                  "deviceOsVersion",
+                  "adType",
+                  "creativeType",
+                  "cid",
+                  "crid",
+                  "country",
+                  "displayManager",
+                  "displayManagerVersion",
+                  "sdkName",
+                  "sdkVersion",
+                  "adNetwork",
+                  "adNetworkName",
+                  "adNetworkPlacementId",
+                  "sellerId",
+                  "sellerName",
+                  "exchangePublisherId",
+                  "gdpr",
+                  "sessionNumber",
+                  "impressionNumber",
+                  {
+                    "type": "path",
+                    "name": "deviceIfaMetric",
+                    "expr": "$.deviceIfa"
+                  },
+                  "eventCode",
+                  "actionCode",
+                  "errorReason",
+                  "dcid"
+                ],
+                "dimensionExclusions": []
+              },
+              "format": "json"
+            }
+          },
+          "granularitySpec": {
+            "type": "uniform",
+            "segmentGranularity": "hour",
+            "queryGranularity": "hour"
+          },
+          "metricsSpec": [
+            {
+              "type": "count",
+              "name": "count"
+            },
+            {
+              "type": "hyperUnique",
+              "name": "deviceCount",
+              "fieldName": "deviceIfaMetric"
+            }
+          ]
+        },
+        "ioConfig": {
+          "type": "realtime"
+        },
+        "tuningConfig": {
+          "type": "realtime",
+          "maxRowsInMemory": "100000",
+          "intermediatePersistPeriod": "PT10M",
+          "windowPeriod": "PT10M"
+        }
+      },
+      "properties": {
+        "task.partitions": "1",
+        "task.replicants": "2",
+        "topicPattern": "errors",
+        "topicPattern.priority": 100
+      }
+    }
+  ],
+  "properties": {
+    "zookeeper.connect": "",
+    "kafka.zookeeper.connect": "",
+    "kafka.group.id": "tranquility-errors",
+    "druid.discovery.curator.path": "/druid/discovery",
+    "druid.selectors.indexing.serviceName": "druid/overlord",
+    "commit.periodMillis": "10000",
+    "consumer.numThreads": "1",
+    "serialization.format": "smile",
+    "druidBeam.taskLocator": "overlord"
+  }
+}

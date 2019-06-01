@@ -1,0 +1,216 @@
+{
+  "dataSources": [
+    {
+      "spec": {
+        "dataSchema": {
+          "dataSource": "invalid-events",
+          "parser": {
+            "type": "string",
+            "parseSpec": {
+              "flattenSpec": {
+                "useFieldDiscovery": false,
+                "fields": [
+                  "timestamp",
+                  "eventId",
+                  "event",
+                  "eventStatus",
+                  "bidRequestId",
+                  "clearPrice",
+                  "clearPriceLevel",
+                  "extSegmentId",
+                  "extPlacementId",
+                  "agencyName",
+                  "agencyId",
+                  "bidderName",
+                  "appBundle",
+                  "appId",
+                  "appIdRaw",
+                  "appName",
+                  "appVersion",
+                  "country",
+                  "deviceOs",
+                  "deviceOsVersion",
+                  "deviceConnectionType",
+                  "adType",
+                  "adSize",
+                  "externalAgencyId",
+                  {
+                    "type": "path",
+                    "name": "latency",
+                    "expr": "$.latencyLevel"
+                  },
+                  "adomain",
+                  "cid",
+                  "crid",
+                  "bidFloorLevel",
+                  "bidPriceLevel",
+                  "siteId",
+                  "siteName",
+                  "siteDomain",
+                  "siteMobile",
+                  "sellerId",
+                  "sellerName",
+                  "exchangePublisherId",
+                  "displayManager",
+                  "displayManagerVersion",
+                  "sdkName",
+                  "sdkVersion",
+                  "adNetwork",
+                  "adNetworkName",
+                  "adNetworkPlacementId",
+                  {
+                    "type": "path",
+                    "name": "appIdMetric",
+                    "expr": "$.appId"
+                  },
+                  {
+                    "type": "path",
+                    "name": "adomainMetric",
+                    "expr": "$.adomain"
+                  },
+                  {
+                    "type": "path",
+                    "name": "cidMetric",
+                    "expr": "$.cid"
+                  },
+                  {
+                    "type": "path",
+                    "name": "cridMetric",
+                    "expr": "$.crid"
+                  },
+                  {
+                    "type": "path",
+                    "name": "exchangeFeeMetric",
+                    "expr": "$.exchangeFee"
+                  },
+                  {
+                    "type": "path",
+                    "name": "sspIncomeMetric",
+                    "expr": "$.sspIncome"
+                  },
+                  "gdpr",
+                  "sessionNumber",
+                  "impressionNumber",
+                  {
+                    "type": "path",
+                    "name": "deviceIfaMetric",
+                    "expr": "$.deviceIfa"
+                  },
+                  "dcid",
+                  "trackingMethod"
+                ]
+              },
+              "timestampSpec": {
+                "column": "timestamp",
+                "format": "auto"
+              },
+              "dimensionsSpec": {
+                "dimensions": [],
+                "dimensionExclusions": [
+                  "eventId",
+                  "bidRequestId",
+                  "appIdMetric",
+                  "adomainMetric",
+                  "cidMetric",
+                  "cridMetric",
+                  "clearPrice",
+                  "exchangeFeeMetric",
+                  "sspIncomeMetric",
+                  "deviceIfaMetric"
+                ]
+              },
+              "format": "json"
+            }
+          },
+          "granularitySpec": {
+            "type": "uniform",
+            "segmentGranularity": "hour",
+            "queryGranularity": "hour"
+          },
+          "metricsSpec": [
+            {
+              "type": "hyperUnique",
+              "name": "eventCount",
+              "fieldName": "eventId"
+            },
+            {
+              "type": "hyperUnique",
+              "name": "auctionCount",
+              "fieldName": "bidRequestId"
+            },
+            {
+              "type": "doubleSum",
+              "name": "clearPriceSum",
+              "fieldName": "clearPrice"
+            },
+            {
+              "type": "count",
+              "name": "count"
+            },
+            {
+              "type": "hyperUnique",
+              "name": "appCount",
+              "fieldName": "appIdMetric"
+            },
+            {
+              "type": "hyperUnique",
+              "name": "adomainCount",
+              "fieldName": "adomainMetric"
+            },
+            {
+              "type": "hyperUnique",
+              "name": "cidCount",
+              "fieldName": "cidMetric"
+            },
+            {
+              "type": "hyperUnique",
+              "name": "cridCount",
+              "fieldName": "cridMetric"
+            },
+            {
+              "type": "doubleSum",
+              "name": "exchangeFee",
+              "fieldName": "exchangeFeeMetric"
+            },
+            {
+              "type": "doubleSum",
+              "name": "sspIncome",
+              "fieldName": "sspIncomeMetric"
+            },
+            {
+              "type": "hyperUnique",
+              "name": "deviceCount",
+              "fieldName": "deviceIfaMetric"
+            }
+          ]
+        },
+        "ioConfig": {
+          "type": "realtime"
+        },
+        "tuningConfig": {
+          "type": "realtime",
+          "maxRowsInMemory": "100000",
+          "intermediatePersistPeriod": "PT10M",
+          "windowPeriod": "PT10M"
+        }
+      },
+      "properties": {
+        "task.partitions": "2",
+        "task.replicants": "2",
+        "topicPattern": "nonvalidevents",
+        "topicPattern.priority": 100
+      }
+    }
+  ],
+  "properties": {
+    "zookeeper.connect": "",
+    "kafka.zookeeper.connect": "",
+    "kafka.group.id": "tranquility-nonvalidevents",
+    "druid.discovery.curator.path": "/druid/discovery",
+    "druid.selectors.indexing.serviceName": "druid/overlord",
+    "commit.periodMillis": "10000",
+    "consumer.numThreads": "1",
+    "serialization.format": "smile",
+    "druidBeam.taskLocator": "overlord"
+  }
+}

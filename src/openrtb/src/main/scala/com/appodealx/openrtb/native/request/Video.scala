@@ -1,0 +1,31 @@
+package com.appodealx.openrtb.native.request
+
+import com.appodealx.openrtb._
+
+case class Video(mimes: List[String],
+                 minduration: Int,
+                 maxduration: Int,
+                 protocol: Option[Protocol] = None,
+                 protocols: List[Protocol],
+                 w: Option[Int] = None,
+                 h: Option[Int] = None,
+                 startdelay: Option[Int] = None,
+                 placement: Option[VideoPlacementType] = None,
+                 linearity: Option[VideoLinearity] = None,
+                 skip: Option[Boolean] = None,
+                 skipmin: Option[Int] = None,
+                 skipafter: Option[Int] = None,
+                 sequence: Option[Int] = None,
+                 battr: Option[List[CreativeAttribute]] = None,
+                 maxextended: Option[Int] = None,
+                 minbitrate: Option[Int] = None,
+                 maxbitrate: Option[Int] = None,
+                 boxingallowed: Option[Boolean] = Some(true),
+                 playbackmethod: Option[List[PlaybackMethod]] = None,
+                 playbackend: Option[PlaybackCessationMode] = None,
+                 delivery: Option[List[ContentDeliveryMethod]] = None,
+                 pos: Option[AdPosition] = None,
+                 companionad: Option[List[Banner]] = None,
+                 api: Option[List[ApiFramework]] = None,
+                 compaiontype: Option[List[CompanionType]] = None,
+                 ext: Option[Json] = None)

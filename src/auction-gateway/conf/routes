@@ -1,0 +1,15 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# An example controller showing a sample home page
+GET         /                        controllers.HealthController.index
+
+POST        /init                    controllers.auction.InitController.init
+
+POST        /request/banner          controllers.auction.PbAuctionController.banner
+POST        /request/video           controllers.auction.PbAuctionController.video
+POST        /request/native          controllers.auction.PbAuctionController.native
+
+POST        /request/rtb             controllers.auction.Rtb2AuctionController.action
+POST        /openrtb3/auction        controllers.auction.Rtb3AuctionController.action

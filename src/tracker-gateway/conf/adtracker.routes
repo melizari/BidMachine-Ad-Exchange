@@ -1,0 +1,13 @@
+GET           /track/health                             controllers.adtracker.HealthCheckController.check
+
+GET           /track/imp/:adType                        controllers.adtracker.AdTrackerController.impressionTyped(adType: String)
+GET           /track/click/:adType                      controllers.adtracker.AdTrackerController.clickTyped(adType: String)
+GET           /track/finish/:adType                     controllers.adtracker.AdTrackerController.finishTyped(adType: String)
+GET           /track/fill/:adType                       controllers.adtracker.AdTrackerController.fillTyped(adType: String)
+GET           /track/custom/:adType                     controllers.adtracker.AdTrackerController.customEventTyped(adType: String)
+
+GET           /track/mraiderror/:adType                 controllers.adtracker.AdErrorTrackerController.mraidErrorTyped(adType: String)
+GET           /track/vasterror/:adType                  controllers.adtracker.AdErrorTrackerController.vastErrorTyped(adType: String)
+GET           /track/nasterror/:adType                  controllers.adtracker.AdErrorTrackerController.nastErrorTyped(adType: String)
+
+GET           /track/event                              controllers.adtracker.EventTrackerController.event

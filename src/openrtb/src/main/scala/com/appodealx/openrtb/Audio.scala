@@ -1,0 +1,21 @@
+package com.appodealx.openrtb
+
+case class Audio(mimes: List[String],
+                 minduration: Option[Int] = None,
+                 maxduration: Option[Int] = None,
+                 protocols: Option[List[Protocol]] = None,
+                 startdelay: Option[Int] = None,
+                 sequence: Option[Int] = None,
+                 battr: Option[List[CreativeAttribute]] = None,
+                 maxextended: Option[Int] = None,
+                 minbitrate: Option[Int] = None,
+                 maxbitrate: Option[Int] = None,
+                 delivery: Option[List[ContentDeliveryMethod]] = None,
+                 companionad: Option[List[Banner]] = None,
+                 api: Option[List[ApiFramework]] = None,
+                 companiontype: Option[List[CompanionType]] = None,
+                 maxseq: Option[Int] = None,
+                 feed: Option[FeedType] = None,
+                 stitched: Option[Boolean] = None,
+                 nvol: Option[VolumeNormalizationMode] = None,
+                 ext: Option[Json] = None)

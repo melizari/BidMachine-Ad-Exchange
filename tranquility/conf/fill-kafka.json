@@ -1,0 +1,203 @@
+{
+  "dataSources": [
+    {
+      "spec": {
+        "dataSchema": {
+          "dataSource": "fills",
+          "parser": {
+            "type": "string",
+            "parseSpec": {
+              "flattenSpec": {
+                "useFieldDiscovery": false,
+                "fields": [
+                  "bidRequestId",
+                  "timestamp",
+                  "clearPrice",
+                  "extSegmentId",
+                  "extPlacementId",
+                  "agencyName",
+                  "agencyId",
+                  "bidderName",
+                  "appBundle",
+                  "appId",
+                  "appIdRaw",
+                  "appName",
+                  "appVersion",
+                  {
+                    "type": "path",
+                    "name": "country",
+                    "expr": "$.deviceCountry"
+                  },
+                  "deviceOs",
+                  "deviceOsVersion",
+                  "adType",
+                  "adSize",
+                  {
+                    "type": "path",
+                    "name": "externalAgencyId",
+                    "expr": "$.extAgencyId"
+                  },
+                  {
+                    "type": "path",
+                    "name": "latency",
+                    "expr": "$.latencyLevel"
+                  },
+                  {
+                    "type": "path",
+                    "name": "latencyMetric",
+                    "expr": "$.latency"
+                  },
+                  "adomain",
+                  "cid",
+                  "crid",
+                  {
+                    "type": "path",
+                    "name": "appIdMetric",
+                    "expr": "$.appId"
+                  },
+                  {
+                    "type": "path",
+                    "name": "adomainMetric",
+                    "expr": "$.adomain"
+                  },
+                  {
+                    "type": "path",
+                    "name": "cidMetric",
+                    "expr": "$.cid"
+                  },
+                  {
+                    "type": "path",
+                    "name": "cridMetric",
+                    "expr": "$.crid"
+                  },
+                  "siteId",
+                  "siteName",
+                  "siteDomain",
+                  "siteMobile",
+                  "sellerId",
+                  "sellerName",
+                  "exchangePublisherId",
+                  "displayManager",
+                  "displayManagerVersion",
+                  "sdkName",
+                  "sdkVersion",
+                  "adNetwork",
+                  "adNetworkName",
+                  "adNetworkPlacementId",
+                  "gdpr",
+                  "adSpaceId",
+                  "sessionNumber",
+                  "sspAuctionType",
+                  "impressionNumber",
+                  {
+                    "type": "path",
+                    "name": "deviceIfaMetric",
+                    "expr": "$.deviceIfa"
+                  },
+                  "dcid",
+                  "trackingMethod"
+                ]
+              },
+              "timestampSpec": {
+                "column": "timestamp",
+                "format": "auto"
+              },
+              "dimensionsSpec": {
+                "dimensions": [],
+                "dimensionExclusions": [
+                  "appIdMetric",
+                  "adomainMetric",
+                  "cidMetric",
+                  "cridMetric",
+                  "deviceIfaMetric",
+                  "latencyMetric"
+                ]
+              },
+              "format": "json"
+            }
+          },
+          "granularitySpec": {
+            "type": "uniform",
+            "segmentGranularity": "hour",
+            "queryGranularity": "hour"
+          },
+          "metricsSpec": [
+            {
+              "type" : "approxHistogramFold",
+              "name" : "fillLatency",
+              "fieldName" : "latencyMetric",
+              "numBuckets" : 10,
+              "lowerLimit" : 0,
+              "upperLimit" : 120
+            },
+            {
+              "type": "hyperUnique",
+              "name": "finishCount",
+              "fieldName": "bidRequestId"
+            },
+            {
+              "type": "doubleSum",
+              "name": "clearPriceSum",
+              "fieldName": "clearPrice"
+            },
+            {
+              "type": "count",
+              "name": "count"
+            },
+            {
+              "type": "hyperUnique",
+              "name": "appCount",
+              "fieldName": "appIdMetric"
+            },
+            {
+              "type": "hyperUnique",
+              "name": "adomainCount",
+              "fieldName": "adomainMetric"
+            },
+            {
+              "type": "hyperUnique",
+              "name": "cidCount",
+              "fieldName": "cidMetric"
+            },
+            {
+              "type": "hyperUnique",
+              "name": "cridCount",
+              "fieldName": "cridMetric"
+            },
+            {
+              "type": "hyperUnique",
+              "name": "deviceCount",
+              "fieldName": "deviceIfaMetric"
+            }
+          ]
+        },
+        "ioConfig": {
+          "type": "realtime"
+        },
+        "tuningConfig": {
+          "type": "realtime",
+          "maxRowsInMemory": "100000",
+          "intermediatePersistPeriod": "PT10M",
+          "windowPeriod": "PT10M"
+        }
+      },
+      "properties": {
+        "task.partitions": "1",
+        "task.replicants": "1",
+        "topicPattern": "tracking.fills",
+        "topicPattern.priority": 100
+      }
+    }
+  ],
+  "properties": {
+    "zookeeper.connect": "",
+    "kafka.zookeeper.connect": "",
+    "kafka.group.id": "tranquility-fills",
+    "druid.discovery.curator.path": "/druid/discovery",
+    "druid.selectors.indexing.serviceName": "druid/overlord",
+    "commit.periodMillis": "10000",
+    "consumer.numThreads": "1",
+    "serialization.format": "smile",
+    "druidBeam.taskLocator": "overlord"
+  }
+}

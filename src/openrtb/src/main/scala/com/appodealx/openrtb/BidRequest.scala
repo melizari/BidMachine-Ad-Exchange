@@ -1,0 +1,22 @@
+package com.appodealx.openrtb
+
+case class BidRequest(id: String,
+                      imp: List[Imp],
+                      site: Option[Site] = None,
+                      app: Option[App] = None,
+                      device: Option[Device] = None,
+                      user: Option[User] = None,
+                      test: Option[Boolean] = Some(false),
+                      at: Option[AuctionType] = None,
+                      tmax: Option[Int] = None,
+                      wseat: Option[List[String]] = None,
+                      bseat: Option[List[String]] = None,
+                      allimps: Option[Boolean] = Some(false),
+                      cur: Option[List[String]] = Some(List("USD")),
+                      wlang: Option[List[String]] = None,
+                      bcat: Option[List[String]] = None,
+                      badv: Option[List[String]] = None,
+                      bapp: Option[List[String]] = None,
+                      source: Option[Source] = None,
+                      regs: Option[Regs] = None,
+                      ext: Option[Json] = None)
