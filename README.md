@@ -32,7 +32,7 @@ The solution includes the following components:
 
 ## Dependencies for build scala-applications:
 
-* JDK8, by default OpenJDK is used, third-party distributives of OpenJDK (Amazon Corretto или Azul Zulu) can be used as well. Oracle JDK and Oracle JRE are supposed to be working, but this configuration was not tested. GraalVM is also applicable, but in case of multiprocessors systems emerges an issue with NUMA.
+* JDK8, by default OpenJDK is used, third-party distributives of OpenJDK (Amazon Corretto or Azul Zulu) can be used as well. Oracle JDK and Oracle JRE are supposed to be working, but this configuration was not tested. GraalVM is also applicable, but in case of multiprocessors systems emerges an issue with NUMA.
 
 * scala 2.12.x (currently 2.12.8 is used)
 
