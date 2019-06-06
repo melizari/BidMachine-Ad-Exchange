@@ -32,30 +32,17 @@ The solution includes the following components:
 
 ## Dependencies for build scala-applications:
 
-
-* JDK8, by default OpenJDK is used, third-party distributives of OpenJDK (Amazon Corretto или Azul Zulu) can be used as well. Oracle JDK and Oracle JRE are supposed to be working, bu this configuration was not tested. GraalVM is also applicable, but in case of multiprocessors systems emerges an issue with NUMA.
+* JDK8, by default OpenJDK is used, third-party distributives of OpenJDK (Amazon Corretto или Azul Zulu) can be used as well. Oracle JDK and Oracle JRE are supposed to be working, but this configuration was not tested. GraalVM is also applicable, but in case of multiprocessors systems emerges an issue with NUMA.
 
 * scala 2.12.x (currently 2.12.8 is used)
 
-
 * sbt. All dependencies and their versions are described in build.sbt 
 
-
-* GeoIP-functionality work in auction-gateway requires additional base MaxMind GeoIP2 or GeoLite2. ​
-
+* GeoIP-functionality work in auction-gateway requires additional base MaxMind GeoIP2 or GeoLite2
 ​
-
-​
-
 Scala-applications can be built on the host where all dependencies (git, jdk8, scala, sbt, etc) are installed, or on CI/CD-solution’s side or in build container (Docker).
-
 ​
-
-​
-
 ## Stages of manual build on host for all scala-applications:
-
-
 1. aquire source code from version control system:​
 
 ```shell
@@ -63,8 +50,6 @@ Scala-applications can be built on the host where all dependencies (git, jdk8, s
 git clone git@github.com:bidmachine/BidMachine-Ad-Exchange.git
 
 ```
-
-
 2. move to directory:
 
 
@@ -74,9 +59,7 @@ cd BidMachine-Ad-Exchange
 
 ```
 
-
 3. Manual edit of configuration files, Dockerfiles and scripts if necessary.
-
 
 4. Run compilation and tests of scala-application via sbt:
 
@@ -87,12 +70,9 @@ sbt "project ${APP_NAME}" test docker:stage
 
 ```
 
-
 5. build docker image with the application and push the image to registry:
 
-
 Note. To build the image with auction-gateway in Dockerfile, the following command is required:
-
 
 ```dockerfile
 
@@ -100,9 +80,7 @@ COPY GeoIP2-City.mmdb /opt/maxmind/GeoIP2-City.mmdb
 
 ```
 
-
 or
-
 
 ```dockerfile
 
@@ -112,7 +90,7 @@ COPY GeoLite2-City.mmdb /opt/maxmind/GeoLite2-City.mmdb
 
 ​
 
-Dockerfile also can be patched on the CI/CD-solution’s side. For example Jenkinfile for Jenkins looks as follows:​
+Dockerfile also can be patched on the CI/CD-solution’s side. For example Jenkinsfile for Jenkins looks as follows:​
 
 
 ``` groovy
@@ -206,7 +184,6 @@ Where the variable `APP_NAME` takes on values: api-gateway, auction-gateway, dru
 ​
 
 Example of basic Dockerfile for multi-stage building:
-
 ​
 
 ```dockerfile
@@ -248,9 +225,7 @@ RUN cd /tmp && wget http://scala-lang.org/files/archive/scala-${SCALA_VERSION}.d
 ```
 
 ​
-
 Example of basic Dockerfile for Jenkins’ image:
-
 ​
 
 ```dockerfile
@@ -361,25 +336,12 @@ USER jenkins
 Depending on environment and platform, deploy can be performed in various ways:
 
 
-1. via docker-compose (APIv3) in Docker SWARM cluster or on standalone Docker-hosts;
-
-
+1. via docker-compose (APIv3) in Docker SWARM cluster or on standalone Docker-hosts
 2. via kubectl to k8s
-
-
 3. via ansible (with k8s module) to k8s
-
-
 4. via helm or werf to k8s
-
-
 5. via dcos-cli to DCOS
-
-
 6. via plugins or extentions of CI/CD-solution to any orchestrator (k8s, DCOS, nomad)
-
-
-
 ​
 
 Example of deploy of one application (auction-gateway) with Jenkins and ansible.
