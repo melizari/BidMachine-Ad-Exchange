@@ -7,11 +7,13 @@ sources in (ThisBuild, Compile, doc) := Seq.empty
 publishArtifact in (ThisBuild, packageDoc) := false
 
 resolvers in ThisBuild ++= Seq(
-  "Bintary JCenter" at "http://jcenter.bintray.com",
+  "Bintary JCenter" at "https://jcenter.bintray.com",
   "Typesafe repository" at "https://repo.typesafe.com/typesafe/ivy-releases/",
   "Typesafe Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/",
   "Atlassian Releases" at "https://maven.atlassian.com/public/",
   Resolver.bintrayRepo("cakesolutions", "maven"),
+  //  ("Artifactory" at "http://jfrog.appodealx.com/artifactory/sbt-dev/").withAllowInsecureProtocol(true),
+  "bidmachine" at "https://artifactory.bidmachine.io/bidmachine-public/",
   "Artifactory" at "https://repo1.maven.org/maven2/"
 )
 
@@ -39,7 +41,7 @@ lazy val `enumeratum`       = "com.beachape" %% "enumeratum"       % "1.5.13"
 lazy val `enumeratum-circe` = "com.beachape" %% "enumeratum-circe" % "1.5.20"
 
 // Play
-lazy val `play-guard`  = "com.digitaltangible" %% "play-guard"  % "2.2.0"
+lazy val `play-guard` = "com.digitaltangible" %% "play-guard" % "2.2.0"
 
 lazy val `play-silhouette-version` = "5.0.6"
 
@@ -81,7 +83,7 @@ lazy val `jsoniter-scala-macros`  = "com.github.plokhotnyuk.jsoniter-scala" %% "
 
 // Parboiled
 lazy val `parboiled-version` = "2.1.5"
-lazy val `parboiled` = "org.parboiled" %% "parboiled" % `parboiled-version`
+lazy val `parboiled`         = "org.parboiled" %% "parboiled" % `parboiled-version`
 
 // ScalaPB
 lazy val `scalapb-runtime`          = "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion
@@ -89,7 +91,7 @@ lazy val `scalapb-runtime-protobuf` = "com.thesamet.scalapb" %% "scalapb-runtime
 lazy val `google-protobuf`          = "com.google.protobuf"  % "protobuf-java"    % "3.6.1"
 
 // Cache
-lazy val `scalacache-version` = "0.26.1-SNAPSHOT"
+lazy val `scalacache-version` = "0.26.0"
 
 lazy val `scalacache-core`     = "com.github.cb372" %% "scalacache-core"     % `scalacache-version`
 lazy val `scalacache-monix`    = "com.github.cb372" %% "scalacache-monix"    % `scalacache-version`
@@ -124,7 +126,7 @@ lazy val exchange = (project in file("."))
     `openrtb`,
     `settings-service`,
     `settings-service-api`,
-    `tracker-gateway`,
+    `tracker-gateway`
   )
 
 lazy val `common` = (project in file("src/common"))
@@ -162,8 +164,10 @@ lazy val `openrtb` = (project in file("src/openrtb"))
   )
 
 lazy val `common-db` = (project in file("src/common-db"))
-  .settings(libraryDependencies += `enumeratum`,
-            libraryDependencies ++= Seq(`play-slick`, `slick-pg`, `slick-pg-circe-json`, `slick-pg-joda-time`))
+  .settings(
+    libraryDependencies += `enumeratum`,
+    libraryDependencies ++= Seq(`play-slick`, `slick-pg`, `slick-pg-circe-json`, `slick-pg-joda-time`)
+  )
 
 lazy val `common-service-locator` = (project in file("src/common-service-locator"))
   .settings(
@@ -175,7 +179,7 @@ lazy val `druid-service-api` = (project in file("src/druid-service-api"))
   .enablePlugins(LagomScala)
   .dependsOn(common, `settings-service-api`)
   .settings(
-    libraryDependencies += "io.swagger" %% "swagger-play2" % "1.6.1-SNAPSHOT",
+    libraryDependencies += "io.swagger" %% "swagger-play2" % "1.6.1",
     libraryDependencies += lagomScaladslApi
   )
 
@@ -191,10 +195,7 @@ lazy val `druid-service` = (project in file("src/druid-service"))
 
 lazy val `api-gateway` = (project in file("src/api-gateway"))
   .enablePlugins(PlayScala && LagomPlay)
-  .dependsOn(`common-db`,
-             `settings-service-api`,
-             `common-service-locator`,
-             `druid-service-api`)
+  .dependsOn(`common-db`, `settings-service-api`, `common-service-locator`, `druid-service-api`)
   .settings(dockerSettings: _*)
   .settings(
     routesImport ++= Seq(
@@ -211,12 +212,14 @@ lazy val `api-gateway` = (project in file("src/api-gateway"))
     libraryDependencies += cats,
     libraryDependencies ++= Seq(`circe-core`, `play-circe`),
     libraryDependencies += macwire,
-    libraryDependencies += "io.swagger"  %% "swagger-play2" % "1.6.1-SNAPSHOT",
+    libraryDependencies += "io.swagger"  %% "swagger-play2" % "1.6.1",
     libraryDependencies += "org.webjars" % "swagger-ui"     % "3.2.2",
-    libraryDependencies ++= Seq(`play-silhouette`,
-                                `play-silhouette-password-bcrypt`,
-                                `play-silhouette-crypto-jca`,
-                                `play-silhouette-persistence`),
+    libraryDependencies ++= Seq(
+      `play-silhouette`,
+      `play-silhouette-password-bcrypt`,
+      `play-silhouette-crypto-jca`,
+      `play-silhouette-persistence`
+    ),
     libraryDependencies ++= Seq(`play-guard`, `play-slick-evolutions`),
     libraryDependencies ++= Seq(
       `scalacache-core`,
@@ -246,6 +249,7 @@ lazy val `auction-gateway` = (project in file("src/auction-gateway"))
     libraryDependencies ++= Seq(`java-semver`, `scala-kafka-client`, `rediscala`, `scalapb-runtime`),
     libraryDependencies += "org.codehaus.janino"   % "janino"                   % "3.0.10",
     libraryDependencies += "com.snowplowanalytics" %% "scala-maxmind-iplookups" % "0.5.0",
+    libraryDependencies += "io.bidmachine"         % "protobuf-models"          % "1.1.3",
     libraryDependencies += `parboiled`,
     libraryDependencies ++= Seq(
       `scalatest`,
