@@ -12,7 +12,6 @@ resolvers in ThisBuild ++= Seq(
   "Typesafe Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/",
   "Atlassian Releases" at "https://maven.atlassian.com/public/",
   Resolver.bintrayRepo("cakesolutions", "maven"),
-     ("Artifactory" at "http://jfrog.appodealx.com/artifactory/sbt-dev/").withAllowInsecureProtocol(true),
   "bidmachine" at "https://artifactory.bidmachine.io/bidmachine-public/",
   "Artifactory" at "https://repo1.maven.org/maven2/"
 )
