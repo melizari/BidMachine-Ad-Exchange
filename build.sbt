@@ -12,7 +12,7 @@ resolvers in ThisBuild ++= Seq(
   "Typesafe Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/",
   "Atlassian Releases" at "https://maven.atlassian.com/public/",
   Resolver.bintrayRepo("cakesolutions", "maven"),
-  //  ("Artifactory" at "http://jfrog.appodealx.com/artifactory/sbt-dev/").withAllowInsecureProtocol(true),
+     ("Artifactory" at "http://jfrog.appodealx.com/artifactory/sbt-dev/").withAllowInsecureProtocol(true),
   "bidmachine" at "https://artifactory.bidmachine.io/bidmachine-public/",
   "Artifactory" at "https://repo1.maven.org/maven2/"
 )
@@ -22,7 +22,7 @@ libraryDependencies in ThisBuild += compilerPlugin("com.olegpy"     %% "better-m
 
 libraryDependencies in ThisBuild ++= Seq(cats, macwire, monix, enumeratum)
 
-// Typelevel
+// Typelevel..
 lazy val cats    = "org.typelevel"            %% "cats-core"  % "1.5.0"
 lazy val macwire = "com.softwaremill.macwire" %% "macros"     % "2.3.1"
 lazy val monix   = "io.monix"                 %% "monix-eval" % "3.0.0-RC2"
