@@ -1,11 +1,11 @@
 #---!Ups
 CREATE TABLE users(
   id BIGSERIAL PRIMARY KEY,
-  role VARCHAR(255) NOT NULL,
   ks VARCHAR(255),
+  email VARCHAR(255) NOT NULL,
+  role VARCHAR(255) NOT NULL,
   name VARCHAR(255),
-  company VARCHAR(255),
-  email VARCHAR(255) NOT NULL
+  company VARCHAR(255)
 );
 
 CREATE TABLE user_logins(
@@ -53,9 +53,9 @@ CREATE TABLE jwt_tokens(
   custom_claims JSON
 );
 
-INSERT INTO users (provider_id, provider_key, role, name, company) VALUES ('basic-auth', 'admin', 'admin', 'Admin', 'AppodealX');
-INSERT INTO passwords (provider_id, provider_key, hasher, password) VALUES ('basic-auth', 'admin', 'bcrypt-sha256', '$2a$10$WIOEn8y1Atrs0UtXP1bjnuv5IZNgA11qVwT2/8kd9OeWLZkUx/3j.');
-INSERT INTO user_logins (user_id, login_provider_id, login_provider_key) VALUES (1, 'basic-auth', 'admin');
+INSERT INTO users (ks, email, role, name, company) VALUES ('basic-auth', 'admin@smowtion.net', 'admin', 'Admin', 'AppodealX');
+INSERT INTO passwords (provider_id, provider_key, hasher, password) VALUES ('credentials', 'admin@smowtion.net', 'bcrypt-sha256', '$2a$10$.p.4AIB89SpW9rheuI2druKESUe6TGvvJ2flQyo2yLeFdjS4QXDfi');
+INSERT INTO user_logins (user_id, login_provider_id, login_provider_key) VALUES (1, 'credentials', 'admin@smowtion.net');
 
 #---!Downs
 DROP TABLE jwt_tokens;
