@@ -77,7 +77,8 @@ class AnalyticsServiceImpl[F[_]: Concurrent: Parallel[?[_], F]](
 
     // Send stats to kafka
     val kafkaBidRequests = rtbAAEs.map(_.toKafkaBidRequest)
-    kafkaBidRequests.foreach(kafkaProducer.send(bidRequestsTopic, _))
+    kafkaBidRequests.foreach(kafkaProducer.send(kafkaTopicSettings.bidRequests, _))
+
     val kafkaBids = rtbAAEs.filter(_.isBid).map(_.toKafkaBid)
     kafkaBids.foreach(kafkaProducer.send(kafkaTopicSettings.bids, _))
 
