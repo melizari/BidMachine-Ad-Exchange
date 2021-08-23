@@ -1,0 +1,567 @@
+{
+  "type": "kafka",
+  "spec": {
+    "dataSchema": {
+      "dataSource": "auction.bid-requests",
+      "timestampSpec": {
+        "column": "timestamp",
+        "format": "auto",
+        "missingValue": null
+      },
+      "dimensionsSpec": {
+        "dimensions": [],
+        "dimensionExclusions": [
+          "bidRequestIdMetric",
+          "mediationCount",
+          "auctionCount",
+          "bidRequestCount",
+          "appsMetric",
+          "usersCountMetric",
+          "mediationIdMetric",
+          "users",
+          "timestamp",
+          "apps"
+        ]
+      },
+      "metricsSpec": [
+        {
+          "type": "count",
+          "name": "bidRequestCount"
+        },
+        {
+          "type": "hyperUnique",
+          "name": "apps",
+          "fieldName": "appsMetric",
+          "isInputHyperUnique": false,
+          "round": false
+        },
+        {
+          "type": "hyperUnique",
+          "name": "auctionCount",
+          "fieldName": "bidRequestIdMetric",
+          "isInputHyperUnique": false,
+          "round": false
+        },
+        {
+          "type": "hyperUnique",
+          "name": "users",
+          "fieldName": "usersCountMetric",
+          "isInputHyperUnique": false,
+          "round": false
+        },
+        {
+          "type": "hyperUnique",
+          "name": "mediationCount",
+          "fieldName": "mediationIdMetric",
+          "isInputHyperUnique": false,
+          "round": false
+        }
+      ],
+      "granularitySpec": {
+        "type": "uniform",
+        "segmentGranularity": "HOUR",
+        "queryGranularity": "HOUR",
+        "rollup": false,
+        "intervals": null
+      },
+      "transformSpec": {
+        "filter": null,
+        "transforms": []
+      }
+    },
+    "ioConfig": {
+      "topic": "auction.bid-requests",
+      "inputFormat": {
+        "type": "json",
+        "flattenSpec": {
+          "useFieldDiscovery": false,
+          "fields": [
+            {
+              "type": "root",
+              "name": "timestamp",
+              "expr": "timestamp"
+            },
+            {
+              "type": "root",
+              "name": "adType",
+              "expr": "adType"
+            },
+            {
+              "type": "root",
+              "name": "app",
+              "expr": "app"
+            },
+            {
+              "type": "root",
+              "name": "adSpaceId",
+              "expr": "adSpaceId"
+            },
+            {
+              "type": "root",
+              "name": "agency",
+              "expr": "agency"
+            },
+            {
+              "type": "root",
+              "name": "agencyId",
+              "expr": "agencyId"
+            },
+            {
+              "type": "root",
+              "name": "bidder",
+              "expr": "bidder"
+            },
+            {
+              "type": "root",
+              "name": "adProfileId",
+              "expr": "adProfileId"
+            },
+            {
+              "type": "root",
+              "name": "bidStatus",
+              "expr": "bidStatus"
+            },
+            {
+              "type": "root",
+              "name": "bidResponseStatus",
+              "expr": "bidResponseStatus"
+            },
+            {
+              "type": "root",
+              "name": "country",
+              "expr": "country"
+            },
+            {
+              "type": "root",
+              "name": "platform",
+              "expr": "platform"
+            },
+            {
+              "type": "path",
+              "name": "appsMetric",
+              "expr": "$.app"
+            },
+            {
+              "type": "path",
+              "name": "bidRequestIdMetric",
+              "expr": "$.bidRequestId"
+            },
+            {
+              "type": "root",
+              "name": "osVersion",
+              "expr": "osVersion"
+            },
+            {
+              "type": "path",
+              "name": "displayManagerVersion",
+              "expr": "$.dmVersion"
+            },
+            {
+              "type": "path",
+              "name": "displayManager",
+              "expr": "$.dm"
+            },
+            {
+              "type": "root",
+              "name": "publisherId",
+              "expr": "publisherId"
+            },
+            {
+              "type": "root",
+              "name": "siteDomain",
+              "expr": "siteDomain"
+            },
+            {
+              "type": "root",
+              "name": "sellerId",
+              "expr": "sellerId"
+            },
+            {
+              "type": "root",
+              "name": "sellerName",
+              "expr": "sellerName"
+            },
+            {
+              "type": "root",
+              "name": "exchangePublisherId",
+              "expr": "exchangePublisherId"
+            },
+            {
+              "type": "path",
+              "name": "usersCountMetric",
+              "expr": "$.ifa"
+            },
+            {
+              "type": "root",
+              "name": "adNetwork",
+              "expr": "adNetwork"
+            },
+            {
+              "type": "root",
+              "name": "adNetworkName",
+              "expr": "adNetworkName"
+            },
+            {
+              "type": "path",
+              "name": "mediationIdMetric",
+              "expr": "$.mediationId"
+            },
+            {
+              "type": "root",
+              "name": "dcid",
+              "expr": "dcid"
+            }
+          ]
+        },
+        "featureSpec": {}
+      },
+      "replicas": 1,
+      "taskCount": 1,
+      "taskDuration": "PT3600S",
+      "consumerProperties": {
+        "bootstrap.servers": "b-1.icluster1-qa-kafka-gro.2i8fds.c4.kafka.us-west-1.amazonaws.com:9092,b-2.icluster1-qa-kafka-gro.2i8fds.c4.kafka.us-west-1.amazonaws.com:9092"
+      },
+      "pollTimeout": 100,
+      "startDelay": "PT5S",
+      "period": "PT30S",
+      "useEarliestOffset": true,
+      "completionTimeout": "PT1800S",
+      "lateMessageRejectionPeriod": null,
+      "earlyMessageRejectionPeriod": null,
+      "lateMessageRejectionStartDateTime": null,
+      "stream": "auction.bid-requests",
+      "useEarliestSequenceNumber": true
+    },
+    "tuningConfig": {
+      "type": "kafka",
+      "appendableIndexSpec": {
+        "type": "onheap"
+      },
+      "maxRowsInMemory": 1000000,
+      "maxBytesInMemory": 0,
+      "maxRowsPerSegment": 5000000,
+      "maxTotalRows": null,
+      "intermediatePersistPeriod": "PT5M",
+      "maxPendingPersists": 0,
+      "indexSpec": {
+        "bitmap": {
+          "type": "roaring",
+          "compressRunOnSerialization": true
+        },
+        "dimensionCompression": "lz4",
+        "metricCompression": "lz4",
+        "longEncoding": "longs",
+        "segmentLoader": null
+      },
+      "indexSpecForIntermediatePersists": {
+        "bitmap": {
+          "type": "roaring",
+          "compressRunOnSerialization": true
+        },
+        "dimensionCompression": "lz4",
+        "metricCompression": "lz4",
+        "longEncoding": "longs",
+        "segmentLoader": null
+      },
+      "buildV9Directly": true,
+      "reportParseExceptions": false,
+      "handoffConditionTimeout": 0,
+      "resetOffsetAutomatically": false,
+      "segmentWriteOutMediumFactory": null,
+      "workerThreads": null,
+      "chatThreads": null,
+      "chatRetries": 8,
+      "httpTimeout": "PT10S",
+      "shutdownTimeout": "PT80S",
+      "offsetFetchPeriod": "PT30S",
+      "intermediateHandoffPeriod": "P2147483647D",
+      "logParseExceptions": false,
+      "maxParseExceptions": 2147483647,
+      "maxSavedParseExceptions": 0,
+      "skipSequenceNumberAvailabilityCheck": false,
+      "repartitionTransitionDuration": "PT120S"
+    }
+  },
+  "dataSchema": {
+    "dataSource": "auction.bid-requests",
+    "timestampSpec": {
+      "column": "timestamp",
+      "format": "auto",
+      "missingValue": null
+    },
+    "dimensionsSpec": {
+      "dimensions": [],
+      "dimensionExclusions": [
+        "bidRequestIdMetric",
+        "mediationCount",
+        "auctionCount",
+        "bidRequestCount",
+        "appsMetric",
+        "usersCountMetric",
+        "mediationIdMetric",
+        "users",
+        "timestamp",
+        "apps"
+      ]
+    },
+    "metricsSpec": [
+      {
+        "type": "count",
+        "name": "bidRequestCount"
+      },
+      {
+        "type": "hyperUnique",
+        "name": "apps",
+        "fieldName": "appsMetric",
+        "isInputHyperUnique": false,
+        "round": false
+      },
+      {
+        "type": "hyperUnique",
+        "name": "auctionCount",
+        "fieldName": "bidRequestIdMetric",
+        "isInputHyperUnique": false,
+        "round": false
+      },
+      {
+        "type": "hyperUnique",
+        "name": "users",
+        "fieldName": "usersCountMetric",
+        "isInputHyperUnique": false,
+        "round": false
+      },
+      {
+        "type": "hyperUnique",
+        "name": "mediationCount",
+        "fieldName": "mediationIdMetric",
+        "isInputHyperUnique": false,
+        "round": false
+      }
+    ],
+    "granularitySpec": {
+      "type": "uniform",
+      "segmentGranularity": "HOUR",
+      "queryGranularity": "HOUR",
+      "rollup": false,
+      "intervals": null
+    },
+    "transformSpec": {
+      "filter": null,
+      "transforms": []
+    }
+  },
+  "tuningConfig": {
+    "type": "kafka",
+    "appendableIndexSpec": {
+      "type": "onheap"
+    },
+    "maxRowsInMemory": 1000000,
+    "maxBytesInMemory": 0,
+    "maxRowsPerSegment": 5000000,
+    "maxTotalRows": null,
+    "intermediatePersistPeriod": "PT5M",
+    "maxPendingPersists": 0,
+    "indexSpec": {
+      "bitmap": {
+        "type": "roaring",
+        "compressRunOnSerialization": true
+      },
+      "dimensionCompression": "lz4",
+      "metricCompression": "lz4",
+      "longEncoding": "longs",
+      "segmentLoader": null
+    },
+    "indexSpecForIntermediatePersists": {
+      "bitmap": {
+        "type": "roaring",
+        "compressRunOnSerialization": true
+      },
+      "dimensionCompression": "lz4",
+      "metricCompression": "lz4",
+      "longEncoding": "longs",
+      "segmentLoader": null
+    },
+    "buildV9Directly": true,
+    "reportParseExceptions": false,
+    "handoffConditionTimeout": 0,
+    "resetOffsetAutomatically": false,
+    "segmentWriteOutMediumFactory": null,
+    "workerThreads": null,
+    "chatThreads": null,
+    "chatRetries": 8,
+    "httpTimeout": "PT10S",
+    "shutdownTimeout": "PT80S",
+    "offsetFetchPeriod": "PT30S",
+    "intermediateHandoffPeriod": "P2147483647D",
+    "logParseExceptions": false,
+    "maxParseExceptions": 2147483647,
+    "maxSavedParseExceptions": 0,
+    "skipSequenceNumberAvailabilityCheck": false,
+    "repartitionTransitionDuration": "PT120S"
+  },
+  "ioConfig": {
+    "topic": "auction.bid-requests",
+    "inputFormat": {
+      "type": "json",
+      "flattenSpec": {
+        "useFieldDiscovery": false,
+        "fields": [
+          {
+            "type": "root",
+            "name": "timestamp",
+            "expr": "timestamp"
+          },
+          {
+            "type": "root",
+            "name": "adType",
+            "expr": "adType"
+          },
+          {
+            "type": "root",
+            "name": "app",
+            "expr": "app"
+          },
+          {
+            "type": "root",
+            "name": "adSpaceId",
+            "expr": "adSpaceId"
+          },
+          {
+            "type": "root",
+            "name": "agency",
+            "expr": "agency"
+          },
+          {
+            "type": "root",
+            "name": "agencyId",
+            "expr": "agencyId"
+          },
+          {
+            "type": "root",
+            "name": "bidder",
+            "expr": "bidder"
+          },
+          {
+            "type": "root",
+            "name": "adProfileId",
+            "expr": "adProfileId"
+          },
+          {
+            "type": "root",
+            "name": "bidStatus",
+            "expr": "bidStatus"
+          },
+          {
+            "type": "root",
+            "name": "bidResponseStatus",
+            "expr": "bidResponseStatus"
+          },
+          {
+            "type": "root",
+            "name": "country",
+            "expr": "country"
+          },
+          {
+            "type": "root",
+            "name": "platform",
+            "expr": "platform"
+          },
+          {
+            "type": "path",
+            "name": "appsMetric",
+            "expr": "$.app"
+          },
+          {
+            "type": "path",
+            "name": "bidRequestIdMetric",
+            "expr": "$.bidRequestId"
+          },
+          {
+            "type": "root",
+            "name": "osVersion",
+            "expr": "osVersion"
+          },
+          {
+            "type": "path",
+            "name": "displayManagerVersion",
+            "expr": "$.dmVersion"
+          },
+          {
+            "type": "path",
+            "name": "displayManager",
+            "expr": "$.dm"
+          },
+          {
+            "type": "root",
+            "name": "publisherId",
+            "expr": "publisherId"
+          },
+          {
+            "type": "root",
+            "name": "siteDomain",
+            "expr": "siteDomain"
+          },
+          {
+            "type": "root",
+            "name": "sellerId",
+            "expr": "sellerId"
+          },
+          {
+            "type": "root",
+            "name": "sellerName",
+            "expr": "sellerName"
+          },
+          {
+            "type": "root",
+            "name": "exchangePublisherId",
+            "expr": "exchangePublisherId"
+          },
+          {
+            "type": "path",
+            "name": "usersCountMetric",
+            "expr": "$.ifa"
+          },
+          {
+            "type": "root",
+            "name": "adNetwork",
+            "expr": "adNetwork"
+          },
+          {
+            "type": "root",
+            "name": "adNetworkName",
+            "expr": "adNetworkName"
+          },
+          {
+            "type": "path",
+            "name": "mediationIdMetric",
+            "expr": "$.mediationId"
+          },
+          {
+            "type": "root",
+            "name": "dcid",
+            "expr": "dcid"
+          }
+        ]
+      },
+      "featureSpec": {}
+    },
+    "replicas": 1,
+    "taskCount": 1,
+    "taskDuration": "PT3600S",
+    "consumerProperties": {
+      "bootstrap.servers": "b-1.icluster1-qa-kafka-gro.2i8fds.c4.kafka.us-west-1.amazonaws.com:9092,b-2.icluster1-qa-kafka-gro.2i8fds.c4.kafka.us-west-1.amazonaws.com:9092"
+    },
+    "pollTimeout": 100,
+    "startDelay": "PT5S",
+    "period": "PT30S",
+    "useEarliestOffset": true,
+    "completionTimeout": "PT1800S",
+    "lateMessageRejectionPeriod": null,
+    "earlyMessageRejectionPeriod": null,
+    "lateMessageRejectionStartDateTime": null,
+    "stream": "auction.bid-requests",
+    "useEarliestSequenceNumber": true
+  },
+  "context": null,
+  "suspended": false
+}
