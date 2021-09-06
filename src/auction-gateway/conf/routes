@@ -11,5 +11,7 @@ POST        /request/banner          controllers.auction.PbAuctionController.ban
 POST        /request/video           controllers.auction.PbAuctionController.video
 POST        /request/native          controllers.auction.PbAuctionController.native
 
+POST        /request/rtb2            controllers.auction.PbRtb2AuctionController.action
+
 POST        /request/rtb             controllers.auction.Rtb2AuctionController.action
 POST        /openrtb3/auction        controllers.auction.Rtb3AuctionController.action
