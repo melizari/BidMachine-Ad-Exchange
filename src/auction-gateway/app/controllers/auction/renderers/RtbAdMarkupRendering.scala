@@ -2,8 +2,8 @@ package controllers.auction.renderers
 
 import com.appodealx.exchange.common.models.{HtmlMarkup, NativeMarkup, PbMarkup, VastMarkup, XmlMarkup}
 import com.appodealx.exchange.common.models.auction.Plc
-import com.appodealx.openrtb.{Bid, BidResponse, SeatBid}
-import io.circe.{Printer}
+import com.appodealx.openrtb.{Bid, BidRequest, BidResponse, SeatBid}
+import io.circe.Printer
 import io.circe.syntax.EncoderOps
 import models.{Ad, DefaultWriteables}
 import play.api.http.Writeable
@@ -16,7 +16,7 @@ trait RtbAdMarkupRendering extends DefaultWriteables with Results with Circe {
 
   private implicit val customPrinter = Printer.noSpaces.copy(dropNullValues = true)
 
-  def renderAd[P: Plc](ad: Ad): Result = {
+  def renderAd[P: Plc](bidRequest: BidRequest)(ad: Ad): Result = {
 
     def getCreative[A: Writeable](m: A) = {
       implicitly[Writeable[A]].transform(m).utf8String
@@ -32,7 +32,7 @@ trait RtbAdMarkupRendering extends DefaultWriteables with Results with Circe {
     }
 
     val bid = Bid(
-      id = ad.metadata.`X-Appodeal-Bid-Request-ID`,
+      id = bidRequest.id,
       impid = ad.metadata.`X-Appodeal-Impression-ID`.get,
       price = ad.sspIncome,
       adid = Option(ad.metadata.`X-Appodeal-Bid-Request-ID`),

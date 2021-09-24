@@ -62,7 +62,7 @@ class Rtb2AuctionController(
       _        <- measureMetrics(req)
       auctions = getAuctions(req)
       adm      <- auction.perform[A, P](req :: Nil, auctions)
-    } yield adm.filterNot(isBlocked(req)).fold(NoContent)(renderAd[P])
+    } yield adm.filterNot(isBlocked(req)).fold(NoContent)(renderAd[P](bidRequest))
   }.onErrorRecover {
     case f: Failure =>
       NoContent.withHeaders(
