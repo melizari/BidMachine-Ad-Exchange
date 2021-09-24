@@ -2,7 +2,8 @@ package controllers.auction.renderers
 
 import com.appodealx.exchange.common.models.auction.Plc
 import com.appodealx.openrtb.{Bid, BidResponse, SeatBid}
-import io.circe.{Printer}
+import io.circe.Printer
+import io.circe.syntax.EncoderOps
 import models.{Ad, DefaultWriteables}
 import play.api.libs.circe.Circe
 import play.api.libs.json._
@@ -12,9 +13,9 @@ import java.util.UUID
 
 trait RtbAdMarkupRendering extends DefaultWriteables with Results with Circe {
 
-  private implicit val bidResponseWrites = Json.writes[BidResponse]
-  private implicit val seatbidWrites = Json.writes[SeatBid]
-  private implicit val bidWrites = Json.writes[Bid]
+  /*private implicit val bidResponseWrites = Json.writes[BidResponse]
+  private implicit val seatbidWrites = Json.writes[List[SeatBid]]
+  private implicit val bidWrites = Json.writes[List[Bid]]*/
 
   private implicit val customPrinter = Printer.noSpaces.copy(dropNullValues = true)
 
@@ -41,7 +42,7 @@ trait RtbAdMarkupRendering extends DefaultWriteables with Results with Circe {
 
     val bidResponse = BidResponse(id = UUID.randomUUID.toString, seatbid = seatBid)
 
-    val json = Json.toJson(bidResponse)
+    val json = bidResponse.asJson.pretty(customPrinter)
 
     Ok(json).withHeaders(DefaultHeaderRenderer.renderHeaders(ad.metadata): _*)
   }
