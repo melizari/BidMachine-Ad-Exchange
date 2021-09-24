@@ -60,7 +60,7 @@
         "type": "uniform",
         "segmentGranularity": "HOUR",
         "queryGranularity": "HOUR",
-        "rollup": false,
+        "rollup": true,
         "intervals": null
       },
       "transformSpec": {
@@ -595,7 +595,7 @@
       "type": "uniform",
       "segmentGranularity": "HOUR",
       "queryGranularity": "HOUR",
-      "rollup": false,
+      "rollup": true,
       "intervals": null
     },
     "transformSpec": {
