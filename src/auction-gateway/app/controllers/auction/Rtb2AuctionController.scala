@@ -12,7 +12,7 @@ import com.appodealx.exchange.settings.persistance.seller.repos.AdSpaceRepo
 import com.appodealx.openrtb.BidRequest
 import com.appodealx.openrtb.native.response
 import controllers.actions.Actions
-import controllers.auction.renderers.PbAdMarkupRendering
+import controllers.auction.renderers.RtbAdMarkupRendering
 import kamon.AdRequestMetrics
 import models._
 import models.auction.AdRequest
@@ -40,7 +40,7 @@ class Rtb2AuctionController(
   implicit val scheduler: Scheduler,
   val globalConfig: GlobalConfigService[Task]
 ) extends AbstractController(cc)
-    with PbAdMarkupRendering
+    with RtbAdMarkupRendering
     with Actions
     with Circe
     with CirceAuctionSettingsInstances {
