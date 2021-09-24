@@ -1,10 +1,12 @@
 package controllers.auction.renderers
 
+import com.appodealx.exchange.common.models.{HtmlMarkup, NativeMarkup, PbMarkup, VastMarkup, XmlMarkup}
 import com.appodealx.exchange.common.models.auction.Plc
 import com.appodealx.openrtb.{Bid, BidResponse, SeatBid}
-import io.circe.Printer
+import io.circe.{Json, Printer}
 import io.circe.syntax.EncoderOps
 import models.{Ad, DefaultWriteables}
+import play.api.http.Writeable
 import play.api.libs.circe.Circe
 import play.api.libs.json._
 import play.api.mvc.{Result, Results}
@@ -21,6 +23,19 @@ trait RtbAdMarkupRendering extends DefaultWriteables with Results with Circe {
 
   def renderAd[P: Plc](ad: Ad): Result = {
 
+    def getCreative[A: Writeable](m: A) = {
+      implicitly[Writeable[A]].transform(m).utf8String
+    }
+
+    val creative = ad.markup match {
+      case XmlMarkup(m)    => getCreative(m)
+      case HtmlMarkup(m)   => getCreative(m)
+      case VastMarkup(m)   => getCreative(m)
+      case NativeMarkup(m) => getCreative(m)
+
+      case PbMarkup(j) => j
+    }
+
     val bid = Bid(
       id = ad.metadata.`X-Appodeal-Bid-Request-ID`,
       impid = ad.metadata.`X-Appodeal-Impression-ID`.get,
@@ -28,7 +43,7 @@ trait RtbAdMarkupRendering extends DefaultWriteables with Results with Circe {
       adid = Option(ad.metadata.`X-Appodeal-Bid-Request-ID`),
       nurl = ad.nurl,
       burl = ad.trackingEvents.viewable.map(_.toString()),
-      adm = Option(ad.markup.toString),
+      adm = Option(creative.toString),
       adomain = Option(List(ad.metadata.`X-Appodeal-Adomain`.get)),
       bundle = ad.bundle,
       cid = ad.metadata.`X-Appodeal-Campaign-ID`,
