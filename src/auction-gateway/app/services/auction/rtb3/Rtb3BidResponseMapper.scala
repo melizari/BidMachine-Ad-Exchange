@@ -35,8 +35,8 @@ object Rtb3BidResponseMapper {
 }
 
 class Rtb3BidResponseMapperImpl(mapToAdcomAd: AdcomAdMapper, settings: BidMachineSettings) extends Rtb3BidResponseMapper {
-  private val urlPrefix = "bidmachine.io/"
-
+  // private val urlPrefix = "bidmachine.io/"
+  private val urlPrefix = "smowtion.net/"
   override def mapToRtb3Response(reqInfo: Rtb3RequestInfo)(ad: Ad) = {
 
     def toOpenrtbResponse(adcomAd: AdcomAd) = {
