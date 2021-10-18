@@ -33,7 +33,7 @@ trait RtbAdMarkupRendering extends DefaultWriteables with Results with Circe {
 
     val bid = Bid(
       id = bidRequest.id,
-      impid = ad.metadata.`X-Appodeal-Impression-ID`.get,
+      impid = bidRequest.imp.headOption.get.id,
       price = ad.sspIncome,
       adid = Option(ad.metadata.`X-Appodeal-Bid-Request-ID`),
       nurl = ad.nurl,
