@@ -52,7 +52,7 @@ trait RtbAdMarkupRendering extends DefaultWriteables with Results with Circe {
 
     val bidResponse = BidResponse(id = UUID.randomUUID.toString, seatbid = seatBid)
 
-    val json = Json.fromString(bidResponse.asJson.pretty(customPrinter))
+    val json = Json.fromString(bidResponse.asJson.toString())
 
     Ok(json).withHeaders(DefaultHeaderRenderer.renderHeaders(ad.metadata): _*)
   }
