@@ -3,6 +3,8 @@ package controllers.auction.renderers
 import com.appodealx.exchange.common.models.{HtmlMarkup, NativeMarkup, PbMarkup, VastMarkup, XmlMarkup}
 import com.appodealx.exchange.common.models.auction.Plc
 import com.appodealx.openrtb.{Bid, BidRequest, BidResponse, SeatBid}
+import controllers.auction.renderers.DefaultAdMarkupRenderer.Ok
+import controllers.auction.renderers.DefaultHeaderRenderer.renderHeaders
 import io.circe.{Json, Printer}
 import io.circe.syntax.EncoderOps
 import models.{Ad, DefaultWriteables}
@@ -52,7 +54,7 @@ trait RtbAdMarkupRendering extends DefaultWriteables with Results with Circe {
 
     val bidResponse = BidResponse(id = UUID.randomUUID.toString, seatbid = seatBid)
 
-    val json = Json.fromString(bidResponse.asJson.toString())
+    val json = Json.fromJsonObject(bidResponse.asJsonObject)
 
     Ok(json).withHeaders(DefaultHeaderRenderer.renderHeaders(ad.metadata): _*)
   }
