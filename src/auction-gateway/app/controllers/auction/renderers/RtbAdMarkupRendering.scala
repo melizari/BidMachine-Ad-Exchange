@@ -5,7 +5,6 @@ import com.appodealx.exchange.common.models.auction.Plc
 import com.appodealx.openrtb.{Bid, BidRequest, BidResponse, SeatBid}
 import controllers.auction.renderers.DefaultAdMarkupRenderer.Ok
 import controllers.auction.renderers.DefaultHeaderRenderer.renderHeaders
-import io.circe.generic.encoding.DerivedObjectEncoder.deriveEncoder
 import io.circe.{Json, Printer}
 import io.circe.syntax.EncoderOps
 import models.{Ad, DefaultWriteables}
@@ -55,7 +54,16 @@ trait RtbAdMarkupRendering extends DefaultWriteables with Results with Circe {
 
     val bidResponse = BidResponse(id = UUID.randomUUID.toString, seatbid = seatBid)
 
-    val json = Json.fromJsonObject(bidResponse.asJsonObject.add("trackers", Json.fromString(ad.trackingEvents.toString)))
+    val json = Json.fromJsonObject(bidResponse.asJsonObject
+      .add("tracker_loaded", Json.fromString(ad.trackingEvents.loaded.toString))
+      .add("tracker_impression", Json.fromString(ad.trackingEvents.impression.toString))
+      .add("tracker_click", Json.fromString(ad.trackingEvents.click.toString))
+      .add("tracker_closed", Json.fromString(ad.trackingEvents.closed.toString))
+      .add("tracker_error", Json.fromString(ad.trackingEvents.error.toString))
+      .add("tracker_tracking_error", Json.fromString(ad.trackingEvents.trackingError.toString))
+      .add("tracker_destroy", Json.fromString(ad.trackingEvents.destroy.toString))
+      .add("tracker_viewable", Json.fromString(ad.trackingEvents.viewable.toString))
+    )
 
     Ok(json).withHeaders(DefaultHeaderRenderer.renderHeaders(ad.metadata): _*)
   }
