@@ -1,7 +1,6 @@
 package controllers.auction
 
 import java.util.UUID
-
 import com.appodealx.exchange.common.models.auction._
 import com.appodealx.exchange.common.models.dto.{Banner, Native, Video}
 import com.appodealx.exchange.common.models.rtb.vast.VAST
@@ -22,7 +21,7 @@ import monix.execution.Scheduler
 import play.api.libs.circe.Circe
 import play.api.mvc._
 import play.twirl.api.Html
-import services.auction.{Auction, AuctionProxy}
+import services.auction.AuctionProxy
 import services.settings.SellerAuctionsSettings
 import services.{DataCenterMetadataSettings, SellerRepo}
 import utils.failureutils._
@@ -30,12 +29,12 @@ import utils.failureutils._
 import scala.concurrent.Future
 
 class Rtb2AuctionController(
-                             adSpaceRepo: AdSpaceRepo[Task],
-                             sellerRepo: SellerRepo[Task],
-                             cc: ControllerComponents,
-                             auction: AuctionProxy[Task],
-                             sellerAuctionsSettings: SellerAuctionsSettings[Task],
-                             dcMetadata: DataCenterMetadataSettings
+  adSpaceRepo: AdSpaceRepo[Task],
+  sellerRepo: SellerRepo[Task],
+  cc: ControllerComponents,
+  auction: AuctionProxy[Task],
+  sellerAuctionsSettings: SellerAuctionsSettings[Task],
+  dcMetadata: DataCenterMetadataSettings
 )(
   implicit val scheduler: Scheduler,
   val globalConfig: GlobalConfigService[Task]
@@ -56,6 +55,16 @@ class Rtb2AuctionController(
     }
   }
 
+  def options() = Action {
+    Ok.withHeaders(
+      "Access-Control-Allow-Credentials" -> "true",
+      "Access-Control-Allow-Methods"     -> "OPTIONS,POST",
+      "Content-Type"                     -> "application/json",
+      "Access-Control-Allow-Origin"      -> "*",
+      "Access-Control-Allow-Headers"     -> "Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin, X-Openrtb-Version"
+    )
+  }
+
   private def performAuction[A: Adm, P: Plc](bidRequest: BidRequest)(implicit r: RequestHeader) = {
     for {
       req      <- buildRequest[P](bidRequest)
@@ -72,9 +81,8 @@ class Rtb2AuctionController(
     case e: Exception => NoContent.withHeaders("ad-exchange-error-message" -> e.getMessage)
   }.runToFuture
 
-  private def getAuctions(req: AdRequest[_]) = {
+  private def getAuctions(req: AdRequest[_]) =
     req.sellerId.flatMap(sellerAuctionsSettings.getAuctionsBySellerId).getOrElse(sellerAuctionsSettings.defaultAuctions)
-  }
 
   private def isBlocked(request: AdRequest[_])(ad: Ad) = {
     val badvSet = request.badv.toSet.flatten
@@ -90,12 +98,14 @@ class Rtb2AuctionController(
 
   private def measureMetrics[P: Plc](req: AdRequest[P]) =
     AdRequestMetrics
-      .measureMetrics[Task, P](req.device.geo.flatMap(_.country),
-                               req.device.os,
-                               req.adSpaceId.map(_.value),
-                               req.sellerId,
-                               req.interstitial,
-                               pb = false)
+      .measureMetrics[Task, P](
+        req.device.geo.flatMap(_.country),
+        req.device.os,
+        req.adSpaceId.map(_.value),
+        req.sellerId,
+        req.interstitial,
+        pb = false
+      )
       .onErrorRecover { case _ => () }
 
   private def buildRequest[T: Plc](bidRequest: BidRequest)(implicit r: RequestHeader) = {

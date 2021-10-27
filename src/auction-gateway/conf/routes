@@ -12,4 +12,5 @@ POST        /request/video           controllers.auction.PbAuctionController.vid
 POST        /request/native          controllers.auction.PbAuctionController.native
 
 POST        /request/rtb             controllers.auction.Rtb2AuctionController.action
+OPTIONS     /request/rtb             controllers.auction.Rtb2AuctionController.options
 POST        /openrtb3/auction        controllers.auction.Rtb3AuctionController.action
