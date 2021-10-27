@@ -13,4 +13,6 @@ case class Ad(markup: Markup,
               adomain: Option[List[String]] = None,
               bundle: Option[String] = None,
               cat: Option[List[String]] = None,
-              nurl: Option[String] = None)
+              nurl: Option[String] = None,
+              iurl: Option[String] = None
+             )

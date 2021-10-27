@@ -38,8 +38,10 @@ trait RtbAdMarkupRendering extends DefaultWriteables with Results with Circe {
       impid = bidRequest.imp.headOption.get.id,
       price = ad.sspIncome,
       adid = Option(ad.metadata.`X-Appodeal-Bid-Request-ID`),
-      nurl = ad.nurl,
+      nurl = ad.trackingEvents.loaded.map(_.toString()),
       burl = ad.trackingEvents.impression.map(_.toString()),
+      lurl = ad.trackingEvents.error.map(_.toString()),
+      iurl = ad.iurl,
       adm = Option(creative.toString),
       adomain = Option(List(ad.metadata.`X-Appodeal-Adomain`.get)),
       bundle = ad.bundle,
@@ -54,8 +56,8 @@ trait RtbAdMarkupRendering extends DefaultWriteables with Results with Circe {
 
     val bidResponse = BidResponse(id = UUID.randomUUID.toString, seatbid = seatBid)
 
-    val json = Json.fromJsonObject(bidResponse.asJsonObject
-      .add("tracker_loaded", Json.fromString(ad.trackingEvents.loaded.toString))
+    val json = Json.fromJsonObject(bidResponse.asJsonObject)
+      /*.add("tracker_loaded", Json.fromString(ad.trackingEvents.loaded.toString))
       .add("tracker_impression", Json.fromString(ad.trackingEvents.impression.toString))
       .add("tracker_click", Json.fromString(ad.trackingEvents.click.toString))
       .add("tracker_closed", Json.fromString(ad.trackingEvents.closed.toString))
@@ -63,7 +65,7 @@ trait RtbAdMarkupRendering extends DefaultWriteables with Results with Circe {
       .add("tracker_tracking_error", Json.fromString(ad.trackingEvents.trackingError.toString))
       .add("tracker_destroy", Json.fromString(ad.trackingEvents.destroy.toString))
       .add("tracker_viewable", Json.fromString(ad.trackingEvents.viewable.toString))
-    )
+    )*/
 
     Ok(json).withHeaders(DefaultHeaderRenderer.renderHeaders(ad.metadata): _*)
   }

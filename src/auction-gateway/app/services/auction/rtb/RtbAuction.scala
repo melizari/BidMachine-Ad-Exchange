@@ -165,20 +165,22 @@ extends Auction[F]
       )
     }
 
-    def ad(repr: A, metadata: Metadata, events: AuctionTrackingEvents, nurl: Option[String]) =
+    def ad(repr: A, metadata: Metadata, events: AuctionTrackingEvents, nurl: Option[String], iurl: Option[String]) =
       Ad(
         markup = Adm[A].render(repr),
         size = plc.size(req.ad),
         metadata = metadata,
         trackingEvents = events,
         sspIncome = income,
-        nurl = nurl
+        nurl = nurl,
+        iurl = iurl
       )
 
     val ctx            = Auction.makeContext(meta, clearedBid)
     val nurl           = bid.nurl.map(substitute(params))
     val burl           = bid.burl.map(substitute(params))
     val nonDelayedNurl = nurl.filterNot(_ => profile.delayedNotification)
+    val impressionIUrl = bid.iurl
 
     val contextTrackers = {
       val delayedNurl = nurl.filter(_ => profile.delayedNotification)
@@ -211,16 +213,16 @@ extends Auction[F]
 
     plc match {
       case s if s.is[Native] && shouldInjectNative && !metadata.renderMetadata =>
-        ad(admWithCallbacks(adm), metadata, trackingEvents, nonDelayedNurl)
+        ad(admWithCallbacks(adm), metadata, trackingEvents, nonDelayedNurl, impressionIUrl)
 
       case s if s.is[Video] && metadata.renderMetadata =>
-        ad(admWithCallbacks(adm, errorsOnly = true), metadata, trackingEvents, nonDelayedNurl)
+        ad(admWithCallbacks(adm, errorsOnly = true), metadata, trackingEvents, nonDelayedNurl, impressionIUrl)
 
       case _ if metadata.renderMetadata =>
-        ad(admWithThirdPartyAndPixel(adm), metadata, trackingEvents, nonDelayedNurl)
+        ad(admWithThirdPartyAndPixel(adm), metadata, trackingEvents, nonDelayedNurl, impressionIUrl)
 
       case _ =>
-        ad(admWithCallbacks(adm), metadata, trackingEvents, nonDelayedNurl)
+        ad(admWithCallbacks(adm), metadata, trackingEvents, nonDelayedNurl, impressionIUrl)
     }
   }
 
