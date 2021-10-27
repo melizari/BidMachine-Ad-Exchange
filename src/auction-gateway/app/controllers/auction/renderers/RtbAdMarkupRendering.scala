@@ -5,6 +5,7 @@ import com.appodealx.exchange.common.models.auction.Plc
 import com.appodealx.openrtb.{Bid, BidRequest, BidResponse, SeatBid}
 import controllers.auction.renderers.DefaultAdMarkupRenderer.Ok
 import controllers.auction.renderers.DefaultHeaderRenderer.renderHeaders
+import io.circe.generic.encoding.DerivedObjectEncoder.deriveEncoder
 import io.circe.{Json, Printer}
 import io.circe.syntax.EncoderOps
 import models.{Ad, DefaultWriteables}
@@ -39,7 +40,7 @@ trait RtbAdMarkupRendering extends DefaultWriteables with Results with Circe {
       price = ad.sspIncome,
       adid = Option(ad.metadata.`X-Appodeal-Bid-Request-ID`),
       nurl = ad.nurl,
-      burl = ad.trackingEvents.viewable.map(_.toString()),
+      burl = ad.trackingEvents.impression.map(_.toString()),
       adm = Option(creative.toString),
       adomain = Option(List(ad.metadata.`X-Appodeal-Adomain`.get)),
       bundle = ad.bundle,
@@ -54,7 +55,7 @@ trait RtbAdMarkupRendering extends DefaultWriteables with Results with Circe {
 
     val bidResponse = BidResponse(id = UUID.randomUUID.toString, seatbid = seatBid)
 
-    val json = Json.fromJsonObject(bidResponse.asJsonObject)
+    val json = Json.fromJsonObject(bidResponse.asJsonObject.add("trackers", ad.trackingEvents.asJson))
 
     Ok(json).withHeaders(DefaultHeaderRenderer.renderHeaders(ad.metadata): _*)
   }
