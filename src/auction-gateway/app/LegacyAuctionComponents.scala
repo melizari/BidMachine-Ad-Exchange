@@ -10,6 +10,7 @@ import play.api.Configuration
 import services.auction.Auction
 import services.auction.pb._
 import services.auction.rtb.RtbAuction
+import services.auction.rtb3.DeviceWithGeoEnricher
 import services.callback.builders._
 import services.callback.injectors.LegacyCallbackInjectorImpl
 import services.callback.injectors.banner.LegacyBannerCallbackInjectorImpl
@@ -94,6 +95,7 @@ trait LegacyAuctionComponents {
     cc = customControllerComponents,
     auction = auctionProxy,
     sellerAuctionsSettings = sellerAuctionsSettings,
-    dcMetadata = datacenterMetadataSettings
+    dcMetadata = datacenterMetadataSettings,
+    enrichDeviceWithGeo = DeviceWithGeoEnricher(geoIpServiceProxyImp),
   )
 }

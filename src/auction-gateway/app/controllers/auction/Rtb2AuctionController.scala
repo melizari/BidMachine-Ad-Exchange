@@ -8,7 +8,7 @@ import com.appodealx.exchange.common.models.{auction => _, _}
 import com.appodealx.exchange.common.services.GlobalConfigService
 import com.appodealx.exchange.settings.models.seller.AdSpaceId
 import com.appodealx.exchange.settings.persistance.seller.repos.AdSpaceRepo
-import com.appodealx.openrtb.BidRequest
+import com.appodealx.openrtb.{BidRequest, Device}
 import com.appodealx.openrtb.native.response
 import controllers.actions.Actions
 import controllers.auction.renderers.RtbAdMarkupRendering
@@ -22,6 +22,7 @@ import play.api.libs.circe.Circe
 import play.api.mvc._
 import play.twirl.api.Html
 import services.auction.AuctionProxy
+import services.auction.rtb3.DeviceWithGeoEnricher.IP
 import services.settings.SellerAuctionsSettings
 import services.{DataCenterMetadataSettings, SellerRepo}
 import utils.failureutils._
@@ -34,7 +35,8 @@ class Rtb2AuctionController(
   cc: ControllerComponents,
   auction: AuctionProxy[Task],
   sellerAuctionsSettings: SellerAuctionsSettings[Task],
-  dcMetadata: DataCenterMetadataSettings
+  dcMetadata: DataCenterMetadataSettings,
+  enrichDeviceWithGeo: (Device, IP) => Task[Device]
 )(
   implicit val scheduler: Scheduler,
   val globalConfig: GlobalConfigService[Task]
@@ -45,14 +47,55 @@ class Rtb2AuctionController(
     with CirceAuctionSettingsInstances {
 
   def action = NoFillAction.async(circe.json[BidRequest]) { implicit request =>
+    def ipFromHeaders = {
+      val headers = request.headers
+
+      headers
+        .get("x-forwarded-for")
+        .orElse(headers.get("X-Forwarded-For"))
+        .flatMap(_.split(",").headOption)
+        .getOrElse("")
+    }
+
+    def getBidFromBidRequest(bidRequest: BidRequest, device: Device) =
+      BidRequest(
+        id = bidRequest.id,
+        imp = bidRequest.imp,
+        site = bidRequest.site,
+        app = bidRequest.app,
+        device = Option(device),
+        user = bidRequest.user,
+        test = bidRequest.test,
+        at = bidRequest.at,
+        tmax = bidRequest.tmax,
+        wseat = bidRequest.wseat,
+        bseat = bidRequest.bseat,
+        allimps = bidRequest.allimps,
+        cur = bidRequest.cur,
+        wlang = bidRequest.wlang,
+        bcat = bidRequest.bcat,
+        badv = bidRequest.badv,
+        bapp = bidRequest.bapp,
+        source = bidRequest.source,
+        regs = bidRequest.regs,
+        ext = bidRequest.ext
+      )
+
     val bidRequest = request.body
 
-    bidRequest.imp.headOption match {
-      case Some(imp) if imp.banner.isDefined => performAuction[Html, Banner](bidRequest)
-      case Some(imp) if imp.video.isDefined  => performAuction[VAST, Video](bidRequest)
-      case Some(imp) if imp.native.isDefined => performAuction[response.Native, Native](bidRequest)
-      case _                                 => Future(NoContent)
-    }
+    {
+      for {
+        device <- enrichDeviceWithGeo(bidRequest.device.get, ipFromHeaders)
+        bid    = getBidFromBidRequest(bidRequest, device)
+      } yield {
+        bid.imp.headOption match {
+          case Some(imp) if imp.banner.isDefined => performAuction[Html, Banner](bid)
+          case Some(imp) if imp.video.isDefined  => performAuction[VAST, Video](bid)
+          case Some(imp) if imp.native.isDefined => performAuction[response.Native, Native](bid)
+          case _                                 => Future(NoContent)
+        }
+      }
+    }.runSyncUnsafe()
   }
 
   def options() = Action {
