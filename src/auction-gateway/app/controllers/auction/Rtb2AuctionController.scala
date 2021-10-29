@@ -18,6 +18,7 @@ import models.auction.AdRequest
 import models.circe.CirceAuctionSettingsInstances
 import monix.eval.Task
 import monix.execution.Scheduler
+import play.api.Logger
 import play.api.libs.circe.Circe
 import play.api.mvc._
 import play.twirl.api.Html
@@ -45,6 +46,8 @@ class Rtb2AuctionController(
     with Actions
     with Circe
     with CirceAuctionSettingsInstances {
+
+  private val logger = Logger(this.getClass)
 
   def action = NoFillAction.async(circe.json[BidRequest]) { implicit request =>
     def ipFromHeaders = {
@@ -168,6 +171,8 @@ class Rtb2AuctionController(
     val extEff = liftTask("Appodeal Extension not found")(
       Task.pure(bidRequest.ext.flatMap(ext => ext.as[BidRequestExtension].toOption))
     )
+
+    logger.debug(s"Bid Request to be auctioned: ${bidRequest.toString}")
 
     val adRequestOpt = for {
       ext     <- extEff
